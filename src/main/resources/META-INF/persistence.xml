@@ -6,9 +6,17 @@ https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
 
 
     <persistence-unit name="api" transaction-type="RESOURCE_LOCAL">
+
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
-        <exclude-unlisted-classes>false</exclude-unlisted-classes>
+        <class>gov.iti.hr.persistence.entities.Job</class>
+        <class>gov.iti.hr.persistence.entities.Employee</class>
+        <class>gov.iti.hr.persistence.entities.Department</class>
+        <class>gov.iti.hr.persistence.entities.JobHistory</class>
+        <class>gov.iti.hr.persistence.entities.EmployeeVacation</class>
+        <class>gov.iti.hr.persistence.entities.VacationTypes</class>
+
+        <exclude-unlisted-classes>true</exclude-unlisted-classes>
 
         <properties>
 
@@ -17,9 +25,9 @@ https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
             <property name="jakarta.persistence.jdbc.password" value="Themiz223@"/>
 
-            <property name="hibernate.show_sql" value="true" />
-            <property name="hibernate.format_sql" value="true" />
-            <property name="hibernate.hbm2ddl.auto" value="create"/>
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
 
             <property name="hibernate.connection.provider_class" value="com.zaxxer.hikari.hibernate.HikariConnectionProvider" />

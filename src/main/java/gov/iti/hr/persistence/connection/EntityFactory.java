@@ -8,10 +8,12 @@ import lombok.Getter;
 
 @Getter
 public class EntityFactory {
+
     private final EntityManagerFactory entityManagerFactory;
+    private static final String PERSISTENCE_UNIT_NAME = "api";
 
     private EntityFactory() {
-        this.entityManagerFactory = Persistence.createEntityManagerFactory("api");
+        this.entityManagerFactory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
     }
 
     private static class SingletonHelper {
