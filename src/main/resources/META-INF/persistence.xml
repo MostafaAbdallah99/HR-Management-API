@@ -1,0 +1,32 @@
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence
+https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
+             version="3.0">
+
+
+    <persistence-unit name="api" transaction-type="RESOURCE_LOCAL">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+
+        <exclude-unlisted-classes>false</exclude-unlisted-classes>
+
+        <properties>
+
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/hr_management"/>
+            <property name="jakarta.persistence.jdbc.user" value="root"/>
+            <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
+            <property name="jakarta.persistence.jdbc.password" value="Themiz223@"/>
+
+            <property name="hibernate.show_sql" value="true" />
+            <property name="hibernate.format_sql" value="true" />
+            <property name="hibernate.hbm2ddl.auto" value="create"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
+
+            <property name="hibernate.connection.provider_class" value="com.zaxxer.hikari.hibernate.HikariConnectionProvider" />
+            <property name="hibernate.hikari.maximumPoolSize" value="10" />
+            <property name="hibernate.hikari.idleTimeout" value="30000" />
+            <property name="hibernate.hikari.minimumIdle" value="10" />
+
+        </properties>
+    </persistence-unit>
+</persistence>
