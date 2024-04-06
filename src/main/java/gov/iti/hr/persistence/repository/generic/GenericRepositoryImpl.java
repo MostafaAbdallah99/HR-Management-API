@@ -5,6 +5,7 @@ import jakarta.persistence.EntityManager;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Optional;
 
 public class GenericRepositoryImpl<T, ID extends Serializable> implements GenericRepository<T, ID> {
     private final Class<T> entityClass;
@@ -14,13 +15,13 @@ public class GenericRepositoryImpl<T, ID extends Serializable> implements Generi
     }
 
     @Override
-    public T findById(ID id, EntityManager entityManager) {
-        return entityManager.find(entityClass, id);
+    public Optional<T> findById(ID id, EntityManager entityManager) {
+        return Optional.ofNullable(entityManager.find(entityClass, id));
     }
 
     @Override
-    public T findReferenceById(ID id, EntityManager entityManager) {
-        return entityManager.getReference(entityClass, id);
+    public Optional<T> findReferenceById(ID id, EntityManager entityManager) {
+        return Optional.ofNullable(entityManager.getReference(entityClass, id));
     }
 
     @Override
