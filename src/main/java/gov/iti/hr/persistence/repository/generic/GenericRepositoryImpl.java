@@ -1,6 +1,7 @@
 package gov.iti.hr.persistence.repository.generic;
 
 
+import gov.iti.hr.restcontrollers.beans.PaginationBean;
 import jakarta.persistence.EntityManager;
 
 import java.io.Serializable;
@@ -25,9 +26,12 @@ public class GenericRepositoryImpl<T, ID extends Serializable> implements Generi
     }
 
     @Override
-    public List<T> findAll(EntityManager entityManager) {
+    public List<T> findAll(EntityManager entityManager, PaginationBean paginationBean) {
         String query = String.format("SELECT t FROM %s t", entityClass.getSimpleName());
-        return entityManager.createQuery(query, entityClass).getResultList();
+        return entityManager.createQuery(query, entityClass)
+                .setFirstResult(paginationBean.getOffset())
+                .setMaxResults(paginationBean.getLimit())
+                .getResultList();
     }
 
     @Override
@@ -60,6 +64,11 @@ public class GenericRepositoryImpl<T, ID extends Serializable> implements Generi
         } catch (Exception e) {
             return false;
         }
+    }
+
+    @Override
+    public void deleteAll(EntityManager entityManager) {
+        entityManager.createQuery(String.format("DELETE FROM %s", entityClass.getSimpleName())).executeUpdate();
     }
 
 }
