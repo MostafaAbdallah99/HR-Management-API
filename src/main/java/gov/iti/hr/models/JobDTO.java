@@ -18,7 +18,7 @@ public record JobDTO (
         Integer maxSalary
 ) implements DTO {
         @Override
-        public Integer ID() {
+        public Integer getDTOId() {
                 return jobId();
         }
 }

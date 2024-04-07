@@ -8,10 +8,10 @@ public enum VacationType {
     SICK_LEAVE("Sick Leave"),
     UNPAID_LEAVE("Unpaid Leave");
 
-    private final String vacationType;
+    private final String type;
 
-    VacationType(String vacationType) {
-        this.vacationType = vacationType;
+    VacationType(String type) {
+        this.type = type;
     }
 
 }

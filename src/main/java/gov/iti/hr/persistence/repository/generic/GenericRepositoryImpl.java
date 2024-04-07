@@ -3,6 +3,8 @@ package gov.iti.hr.persistence.repository.generic;
 
 import gov.iti.hr.restcontrollers.beans.PaginationBean;
 import jakarta.persistence.EntityManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.List;
@@ -40,7 +42,8 @@ public class GenericRepositoryImpl<T, ID extends Serializable> implements Generi
             entityManager.persist(entity);
             return true;
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            Logger logger = LoggerFactory.getLogger(GenericRepositoryImpl.class);
+            logger.error("Error saving entity {}", entity, e);
             return false;
         }
     }
@@ -51,7 +54,8 @@ public class GenericRepositoryImpl<T, ID extends Serializable> implements Generi
             entityManager.merge(entity);
             return true;
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            Logger logger = LoggerFactory.getLogger(GenericRepositoryImpl.class);
+            logger.error("Error updating entity {}", entity, e);
             return false;
         }
     }

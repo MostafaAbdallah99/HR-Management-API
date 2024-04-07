@@ -11,6 +11,9 @@ import java.util.Optional;
 
 public class LinksUtil {
 
+    private LinksUtil() {
+    }
+
     public static <T> Link createSelfLink(UriInfo uriInfo, Class<T> path, String id) {
         return Link.fromUri(uriInfo.getBaseUriBuilder().path(path).path(id).build())
                 .rel("self")

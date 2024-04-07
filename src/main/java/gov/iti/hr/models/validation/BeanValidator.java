@@ -15,6 +15,9 @@ public class BeanValidator {
 
     private static final Validator validator;
 
+    private BeanValidator() {
+    }
+
     static {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
@@ -29,11 +32,11 @@ public class BeanValidator {
     }
 
     public static void validateID(DTO dto, String httpRequestMethod) {
-        if(HttpMethod.POST.equals(httpRequestMethod) && dto.ID() != null) {
+        if(HttpMethod.POST.equals(httpRequestMethod) && dto.getDTOId() != null) {
             throw new EntityCreationException("ID should not be provided when creating a new entity");
         }
 
-        if(HttpMethod.PUT.equals(httpRequestMethod) && dto.ID() == null) {
+        if(HttpMethod.PUT.equals(httpRequestMethod) && dto.getDTOId() == null) {
             throw new EntityCreationException("ID should be provided when updating an entity");
         }
     }

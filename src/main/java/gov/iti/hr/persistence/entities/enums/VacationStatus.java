@@ -8,10 +8,10 @@ public enum VacationStatus {
     APPROVED("Approved"),
     REJECTED("Rejected");
 
-    private final String vacationStatus;
+    private final String status;
 
-    VacationStatus(String vacationStatus) {
-        this.vacationStatus = vacationStatus;
+    VacationStatus(String status) {
+        this.status = status;
     }
 
 }

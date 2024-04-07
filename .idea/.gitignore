@@ -10,6 +10,8 @@
 /jpa-buddy.xml
 /uiDesigner.xml
 /web-app_6_0.xsd
+/inspectionProfiles/Project_Default.xml
+/sonarlint
 
 # Compiled class file
 *.class

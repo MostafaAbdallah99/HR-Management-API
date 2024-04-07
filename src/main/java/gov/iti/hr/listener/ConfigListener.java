@@ -5,7 +5,8 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -25,7 +26,8 @@ public class ConfigListener implements ServletContextListener {
             try {
                 DriverManager.deregisterDriver(driver);
             } catch (SQLException e) {
-                System.out.println("Error unregistering driver " + driver);
+                Logger logger = LoggerFactory.getLogger(ConfigListener.class);
+                logger.error("Error unregistering driver {}", driver, e);
             }
         }
 

@@ -12,10 +12,10 @@ import gov.iti.hr.restcontrollers.beans.PaginationBean;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class JobService {
     private final JobRepositoryImpl jobRepository;
+    private static final String JOB_NOT_FOUND_MSG = "Job not found with id: ";
 
     public JobService() {
         jobRepository = new JobRepositoryImpl();
@@ -38,7 +38,7 @@ public class JobService {
             Optional<Job> job = jobRepository.findById(jobId, entityManager);
             job.ifPresent(j -> {
                 if(!jobRepository.delete(j, entityManager)) {
-                    throw new ResourceNotFoundException("Job not found with id: " + jobId);
+                    throw new ResourceNotFoundException(JOB_NOT_FOUND_MSG + jobId);
                 }
             });
         });
@@ -52,7 +52,7 @@ public class JobService {
         TransactionManager.doInTransactionWithoutResult(entityManager -> {
             Job job = JobMapper.INSTANCE.jobDTOToJob(jobDTO);
             if(!jobRepository.update(job, entityManager)) {
-                throw new ResourceNotFoundException("Job not found with id: " + jobDTO.jobId());
+                throw new ResourceNotFoundException(JOB_NOT_FOUND_MSG + jobDTO.jobId());
             }
         });
     }
@@ -60,7 +60,7 @@ public class JobService {
     public JobDTO getJobById(Integer jobId) {
         return TransactionManager.doInTransaction(entityManager -> jobRepository.findById(jobId, entityManager)
                 .map(JobMapper.INSTANCE::jobToJobDTO)
-                .orElseThrow(() -> new ResourceNotFoundException("Job not found with id: " + jobId)));
+                .orElseThrow(() -> new ResourceNotFoundException(JOB_NOT_FOUND_MSG + jobId)));
     }
 
     public List<JobDTO> getAllJobs(PaginationBean paginationBean) {
@@ -68,7 +68,7 @@ public class JobService {
         return TransactionManager.doInTransaction(entityManager -> jobRepository.findAll(entityManager, paginationBean)
                 .stream()
                 .map(JobMapper.INSTANCE::jobToJobDTO)
-                .collect(Collectors.toList()));
+                .toList());
     }
 
     public List<JobDTO> getJobsWithSalary(Integer min, Integer max, PaginationBean paginationBean) {
@@ -76,7 +76,7 @@ public class JobService {
         return TransactionManager.doInTransaction(entityManager -> jobRepository.getJobsBySalaryRange(min, max, paginationBean, entityManager)
                 .stream()
                 .map(JobMapper.INSTANCE::jobToJobDTO)
-                .collect(Collectors.toList()));
+                .toList());
     }
 
     public Integer getJobsCount() {
