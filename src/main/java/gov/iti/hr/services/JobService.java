@@ -23,6 +23,7 @@ public class JobService {
 
     public Integer saveJob(JobDTO jobDTO) {
         return TransactionManager.doInTransaction(entityManager -> {
+            validateJobCreation(jobDTO);
             Job job = JobMapper.INSTANCE.jobDTOToJob(jobDTO);
             if(jobRepository.save(job, entityManager)) {
                 return job.getJobId();
@@ -92,6 +93,12 @@ public class JobService {
             throw new InvalidPaginationException("Limit cannot be negative");
         } else if (isOffsetNegative) {
             throw new InvalidPaginationException("Offset cannot be negative");
+        }
+    }
+
+    private void validateJobCreation(JobDTO jobDTO) {
+        if(jobDTO.maxSalary() < jobDTO.minSalary()) {
+            throw new EntityCreationException("Max salary cannot be less than min salary");
         }
     }
 }

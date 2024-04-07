@@ -3,7 +3,6 @@ package gov.iti.hr.restcontrollers.resources.jobs;
 import gov.iti.hr.models.JobDTO;
 import gov.iti.hr.restcontrollers.adapter.JaxbLinkAdapter;
 import gov.iti.hr.restcontrollers.adapter.JsonbSingleLinkAdapter;
-import gov.iti.hr.restcontrollers.response.RestResponse;
 import jakarta.json.bind.annotation.JsonbPropertyOrder;
 import jakarta.json.bind.annotation.JsonbTypeAdapter;
 import jakarta.ws.rs.core.Link;
@@ -23,7 +22,7 @@ import java.io.Serializable;
 @Setter
 @ToString
 @NoArgsConstructor
-public class JobResponse implements RestResponse, Serializable {
+public class JobResponse implements Serializable {
     @Getter
     private Integer jobId;
     @Getter

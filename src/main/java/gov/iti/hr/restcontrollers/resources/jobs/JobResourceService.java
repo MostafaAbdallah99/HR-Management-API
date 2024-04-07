@@ -1,11 +1,13 @@
 package gov.iti.hr.restcontrollers.resources.jobs;
 
 import gov.iti.hr.models.JobDTO;
+import gov.iti.hr.models.validation.BeanValidator;
 import gov.iti.hr.restcontrollers.beans.PaginationBean;
 import gov.iti.hr.restcontrollers.resources.interfaces.JobResource;
 import gov.iti.hr.restcontrollers.utils.LinksUtil;
 import gov.iti.hr.services.JobService;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.HttpMethod;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
@@ -50,6 +52,8 @@ public class JobResourceService implements JobResource {
 
     @Override
     public Response addJob(JobDTO jobDTO) {
+        BeanValidator.validateBean(jobDTO);
+        BeanValidator.validateID(jobDTO, HttpMethod.POST);
         Integer jobId = jobService.saveJob(jobDTO);
         JobDTO newJobDTO = new JobDTO(jobId, jobDTO.jobTitle(), jobDTO.minSalary(), jobDTO.maxSalary());
         JobResponse jobResponse = new JobResponse(newJobDTO);
@@ -72,6 +76,8 @@ public class JobResourceService implements JobResource {
 
     @Override
     public Response updateJob(Integer id, JobDTO jobDTO) {
+        BeanValidator.validateBean(jobDTO);
+        BeanValidator.validateID(jobDTO, HttpMethod.PUT);
         JobDTO updatedJobDTO = new JobDTO(id, jobDTO.jobTitle(), jobDTO.minSalary(), jobDTO.maxSalary());
         jobService.updateJob(updatedJobDTO);
         JobResponse jobResponse = new JobResponse(updatedJobDTO);

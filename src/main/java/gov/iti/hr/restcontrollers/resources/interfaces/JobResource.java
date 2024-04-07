@@ -2,6 +2,7 @@ package gov.iti.hr.restcontrollers.resources.interfaces;
 
 import gov.iti.hr.models.JobDTO;
 import gov.iti.hr.restcontrollers.beans.PaginationBean;
+import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 
 import jakarta.ws.rs.core.Response;
