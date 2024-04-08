@@ -76,6 +76,12 @@ public class JobService {
         return TransactionManager.doInTransaction(jobRepository::getJobsCount);
     }
 
+    public JobDTO getJobByTitle(String jobTitle) {
+        return TransactionManager.doInTransaction(entityManager -> jobRepository.findJobByName(jobTitle, entityManager)
+                .map(JobMapper.INSTANCE::jobToJobDTO)
+                .orElseThrow(() -> new ResourceNotFoundException("Job not found with title: " + jobTitle)));
+    }
+
     private void validatePaginationParameters(PaginationBean paginationBean) {
         boolean isLimitNegative = paginationBean.getLimit() < 0;
         boolean isOffsetNegative = paginationBean.getOffset() < 0;

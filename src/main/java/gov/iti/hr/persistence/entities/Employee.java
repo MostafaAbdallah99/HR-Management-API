@@ -45,7 +45,7 @@ public class Employee {
     private Integer vacationBalance;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "gender", nullable = false, length = 1)
+    @Column(name = "gender", nullable = false, length = 6)
     private Gender gender;
 
     @ManyToOne

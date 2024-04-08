@@ -12,6 +12,7 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 
 import java.util.List;
+import java.util.Optional;
 
 public class JobRepositoryImpl extends GenericRepositoryImpl<Job, Integer> implements JobRepository {
     public JobRepositoryImpl() {
@@ -34,5 +35,12 @@ public class JobRepositoryImpl extends GenericRepositoryImpl<Job, Integer> imple
         jobTypedQuery.setFirstResult(filter.getOffset());
         jobTypedQuery.setMaxResults(filter.getLimit());
         return jobTypedQuery.getResultList();
+    }
+
+    @Override
+    public Optional<Job> findJobByName(String jobTitle, EntityManager entityManager) {
+        return Optional.ofNullable(entityManager.createQuery("SELECT j FROM Job j WHERE j.jobTitle = :jobTitle", Job.class)
+                .setParameter("jobTitle", jobTitle)
+                .getSingleResult());
     }
 }

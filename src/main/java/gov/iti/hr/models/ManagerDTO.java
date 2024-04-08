@@ -2,9 +2,11 @@ package gov.iti.hr.models;
 
 import gov.iti.hr.models.dto.DTO;
 import gov.iti.hr.persistence.entities.enums.Gender;
+import jakarta.json.bind.annotation.JsonbDateFormat;
 import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
 
 public record ManagerDTO (
@@ -21,16 +23,19 @@ public record ManagerDTO (
         String phoneNumber,
         @NotNull(message = "Hire date is required")
         @PastOrPresent(message = "Hire date should be in the past or present")
-        Date hireDate,
+        @JsonbDateFormat("yyyy-MM-dd")
+        LocalDate hireDate,
         @DecimalMin(value = "0.0", message = "Salary should be a positive number")
         BigDecimal salary,
         @Min(value = 0, message = "Vacation balance should be a positive number")
         Integer vacationBalance,
         @NotNull(message = "Gender is required")
         Gender gender,
-        @NotNull(message = "Department is required")
-        DepartmentDTO department,
         @NotNull(message = "Job is required")
+        String jobName,
+        @NotNull(message = "Department is required")
+        String departmentName,
+        DepartmentDTO department,
         JobDTO job
 ) implements DTO {
     @Override

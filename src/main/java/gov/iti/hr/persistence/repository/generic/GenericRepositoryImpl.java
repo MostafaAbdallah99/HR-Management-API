@@ -34,6 +34,7 @@ public class GenericRepositoryImpl<T, ID extends Serializable> implements Generi
         } catch (Exception e) {
             Logger logger = LoggerFactory.getLogger(GenericRepositoryImpl.class);
             logger.error("Error saving entity {}", entity, e);
+            System.out.println(e.getMessage());
             return false;
         }
     }
