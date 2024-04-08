@@ -75,4 +75,9 @@ public class GenericRepositoryImpl<T, ID extends Serializable> implements Generi
         entityManager.createQuery(String.format("DELETE FROM %s", entityClass.getSimpleName())).executeUpdate();
     }
 
+    @Override
+    public Integer count(EntityManager entityManager) {
+        return entityManager.createQuery(String.format("SELECT COUNT(t) FROM %s t", entityClass.getSimpleName()), Long.class).getSingleResult().intValue();
+    }
+
 }

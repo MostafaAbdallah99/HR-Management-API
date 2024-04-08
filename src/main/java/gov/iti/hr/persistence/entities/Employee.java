@@ -41,8 +41,8 @@ public class Employee {
     @Column(name ="salary", nullable = false, precision = 8, scale = 2)
     private BigDecimal salary;
 
-    @Column(name = "commission_pct", precision = 2, scale = 2)
-    private BigDecimal commissionPct;
+    @Column(name = "vacation_balance", nullable = false, columnDefinition = "int default 21")
+    private Integer vacationBalance;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "gender", nullable = false, length = 1)
@@ -70,7 +70,7 @@ public class Employee {
 
     @Override
     public int hashCode() {
-        return Objects.hash(employeeId, firstName, lastName, email, phoneNumber, hireDate, salary, commissionPct, gender);
+        return Objects.hash(employeeId, firstName, lastName, email, phoneNumber, hireDate, salary, vacationBalance, gender);
     }
 
 }

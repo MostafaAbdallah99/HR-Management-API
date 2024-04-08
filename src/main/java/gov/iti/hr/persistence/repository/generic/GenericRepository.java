@@ -20,4 +20,6 @@ public interface GenericRepository<T, ID> {
     boolean delete(T entity, EntityManager entityManager);
 
     void deleteAll(EntityManager entityManager);
+
+    Integer count(EntityManager entityManager);
 }

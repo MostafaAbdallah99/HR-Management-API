@@ -22,7 +22,7 @@ public class Department {
     private String departmentName;
 
     @ManyToOne
-    @JoinColumn(name = "manager_id", nullable = false)
+    @JoinColumn(name = "manager_id")
     private Employee manager;
 
     @Override
