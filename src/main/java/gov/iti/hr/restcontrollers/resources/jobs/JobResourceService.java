@@ -1,15 +1,12 @@
 package gov.iti.hr.restcontrollers.resources.jobs;
 
+import gov.iti.hr.filters.JobFilter;
 import gov.iti.hr.models.JobDTO;
 import gov.iti.hr.models.validation.BeanValidator;
-import gov.iti.hr.restcontrollers.beans.PaginationBean;
 import gov.iti.hr.restcontrollers.resources.interfaces.JobResource;
 import gov.iti.hr.restcontrollers.utils.LinksUtil;
 import gov.iti.hr.services.JobService;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.HttpMethod;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Link;
 import jakarta.ws.rs.core.Response;
@@ -40,12 +37,12 @@ public class JobResourceService implements JobResource {
     }
 
     @Override
-    public Response getJobs(PaginationBean paginationBean) {
+    public Response getJobs(JobFilter jobFilter) {
         Integer count = jobService.getJobsCount();
-        List<JobDTO> jobs = jobService.getAllJobs(paginationBean);
+        List<JobDTO> jobs = jobService.getAllJobs(jobFilter);
         List<JobResponse> jobResponses = jobs.stream().map(JobResponse::new).toList();
         jobResponses.forEach(jobResponse -> jobResponse.setLink(LinksUtil.createSelfLink(uriInfo, JobResourceService.class, jobResponse.getJobId().toString())));
-        List<Link> links = LinksUtil.createPaginatedResourceLinks(uriInfo, paginationBean, count);
+        List<Link> links = LinksUtil.createPaginatedResourceLinks(uriInfo, jobFilter.getPaginationBean(), count);
         JobPaginationResponse jobPaginationResponse = new JobPaginationResponse(jobResponses, links);
         return Response.ok(jobPaginationResponse).build();
     }

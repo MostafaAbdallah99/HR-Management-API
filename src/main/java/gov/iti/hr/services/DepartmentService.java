@@ -68,12 +68,7 @@ public class DepartmentService {
         );
     }
 
-    public List<DepartmentDTO> getAllDepartments(PaginationBean paginationBean) {
-        return TransactionManager.doInTransaction(entityManager -> departmentRepository.findAll(entityManager, paginationBean)
-                    .stream()
-                    .map(DepartmentMapper.INSTANCE::departmentToDepartmentDTO)
-                    .toList());
-    }
+
 
     public Integer getDepartmentsCount() {
         return TransactionManager.doInTransaction(departmentRepository::count);

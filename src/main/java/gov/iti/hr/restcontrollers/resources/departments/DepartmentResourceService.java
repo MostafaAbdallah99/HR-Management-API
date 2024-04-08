@@ -40,13 +40,14 @@ public class DepartmentResourceService implements DepartmentResource {
 
     @Override
     public Response getDepartments(PaginationBean paginationBean) {
-        Integer count = departmentService.getDepartmentsCount();
+/*        Integer count = departmentService.getDepartmentsCount();
         List<DepartmentDTO> departments = departmentService.getAllDepartments(paginationBean);
         List<DepartmentResponse> departmentResponses = departments.stream().map(DepartmentResponse::new).toList();
         departmentResponses.forEach(departmentResponse -> departmentResponse.setLink(LinksUtil.createSelfLink(uriInfo, DepartmentResourceService.class, departmentResponse.getDepartmentId().toString())));
         List<Link> links = LinksUtil.createPaginatedResourceLinks(uriInfo, paginationBean, count);
         DepartmentPaginationResponse departmentPaginationResponse = new DepartmentPaginationResponse(departmentResponses, links);
-        return Response.ok(departmentPaginationResponse).build();
+        return Response.ok(departmentPaginationResponse).build();*/
+        return null;
     }
 
     @Override

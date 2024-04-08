@@ -9,6 +9,7 @@ import gov.iti.hr.persistence.entities.Job;
 import gov.iti.hr.persistence.repository.TransactionManager;
 import gov.iti.hr.persistence.repository.repositories.JobRepositoryImpl;
 import gov.iti.hr.restcontrollers.beans.PaginationBean;
+import gov.iti.hr.filters.JobFilter;
 
 import java.util.List;
 import java.util.Optional;
@@ -63,17 +64,9 @@ public class JobService {
                 .orElseThrow(() -> new ResourceNotFoundException(JOB_NOT_FOUND_MSG + jobId)));
     }
 
-    public List<JobDTO> getAllJobs(PaginationBean paginationBean) {
-        validatePaginationParameters(paginationBean);
-        return TransactionManager.doInTransaction(entityManager -> jobRepository.findAll(entityManager, paginationBean)
-                .stream()
-                .map(JobMapper.INSTANCE::jobToJobDTO)
-                .toList());
-    }
-
-    public List<JobDTO> getJobsWithSalary(Integer min, Integer max, PaginationBean paginationBean) {
-        validatePaginationParameters(paginationBean);
-        return TransactionManager.doInTransaction(entityManager -> jobRepository.getJobsBySalaryRange(min, max, paginationBean, entityManager)
+    public List<JobDTO> getAllJobs(JobFilter jobFilter) {
+        validatePaginationParameters(jobFilter.getPaginationBean());
+        return TransactionManager.doInTransaction(entityManager -> jobRepository.getAllJobs(entityManager, jobFilter)
                 .stream()
                 .map(JobMapper.INSTANCE::jobToJobDTO)
                 .toList());

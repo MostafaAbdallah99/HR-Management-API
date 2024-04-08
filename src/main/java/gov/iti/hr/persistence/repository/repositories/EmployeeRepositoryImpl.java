@@ -1,9 +1,9 @@
 package gov.iti.hr.persistence.repository.repositories;
 
 import gov.iti.hr.filters.interfaces.Filter;
-import gov.iti.hr.persistence.entities.Job;
+import gov.iti.hr.persistence.entities.Employee;
 import gov.iti.hr.persistence.repository.generic.GenericRepositoryImpl;
-import gov.iti.hr.persistence.repository.interfaces.JobRepository;
+import gov.iti.hr.persistence.repository.interfaces.EmployeeRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -13,24 +13,19 @@ import jakarta.persistence.criteria.Root;
 
 import java.util.List;
 
-public class JobRepositoryImpl extends GenericRepositoryImpl<Job, Integer> implements JobRepository {
-    public JobRepositoryImpl() {
-        super(Job.class);
+public class EmployeeRepositoryImpl extends GenericRepositoryImpl<Employee, Integer> implements EmployeeRepository {
+    public EmployeeRepositoryImpl() {
+        super(Employee.class);
     }
 
     @Override
-    public Integer getJobsCount(EntityManager entityManager) {
-        return entityManager.createQuery("SELECT COUNT(j) FROM Job j", Long.class).getSingleResult().intValue();
-    }
-
-    @Override
-    public List<Job> getAllJobs(EntityManager entityManager, Filter filter) {
+    public List<Employee> findAll(EntityManager entityManager, Filter filter) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Job> query = cb.createQuery(Job.class);
-        Root<Job> root = query.from(Job.class);
+        CriteriaQuery<Employee> query = cb.createQuery(Employee.class);
+        Root<Employee> root = query.from(Employee.class);
         List<Predicate> predicates = filter.getPredicates(cb, root);
         query.select(root).where(predicates.toArray(new Predicate[0]));
-        TypedQuery<Job> jobTypedQuery = entityManager.createQuery(query);
+        TypedQuery<Employee> jobTypedQuery = entityManager.createQuery(query);
         jobTypedQuery.setFirstResult(filter.getOffset());
         jobTypedQuery.setMaxResults(filter.getLimit());
         return jobTypedQuery.getResultList();

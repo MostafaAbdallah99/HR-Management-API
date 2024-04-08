@@ -1,7 +1,7 @@
 package gov.iti.hr.restcontrollers.resources.interfaces;
 
+import gov.iti.hr.filters.JobFilter;
 import gov.iti.hr.models.JobDTO;
-import gov.iti.hr.restcontrollers.beans.PaginationBean;
 import jakarta.ws.rs.*;
 
 import jakarta.ws.rs.core.Response;
@@ -15,7 +15,7 @@ public interface JobResource {
     Response getJob(@PathParam("id") Integer id);
 
     @GET
-    Response getJobs(@BeanParam PaginationBean paginationBean);
+    Response getJobs(@BeanParam JobFilter jobFilter);
 
     @POST
     Response addJob(JobDTO jobDTO);

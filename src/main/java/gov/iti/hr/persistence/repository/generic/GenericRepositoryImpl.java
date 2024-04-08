@@ -1,13 +1,12 @@
 package gov.iti.hr.persistence.repository.generic;
 
 
-import gov.iti.hr.restcontrollers.beans.PaginationBean;
+
 import jakarta.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Optional;
 
 public class GenericRepositoryImpl<T, ID extends Serializable> implements GenericRepository<T, ID> {
@@ -25,15 +24,6 @@ public class GenericRepositoryImpl<T, ID extends Serializable> implements Generi
     @Override
     public Optional<T> findReferenceById(ID id, EntityManager entityManager) {
         return Optional.ofNullable(entityManager.getReference(entityClass, id));
-    }
-
-    @Override
-    public List<T> findAll(EntityManager entityManager, PaginationBean paginationBean) {
-        String query = String.format("SELECT t FROM %s t", entityClass.getSimpleName());
-        return entityManager.createQuery(query, entityClass)
-                .setFirstResult(paginationBean.getOffset())
-                .setMaxResults(paginationBean.getLimit())
-                .getResultList();
     }
 
     @Override
