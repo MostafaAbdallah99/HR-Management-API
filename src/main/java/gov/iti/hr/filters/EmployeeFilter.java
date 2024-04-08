@@ -8,6 +8,10 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import jakarta.ws.rs.BeanParam;
 import jakarta.ws.rs.QueryParam;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -15,6 +19,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class EmployeeFilter implements Filter {
     @BeanParam
     private PaginationBean paginationBean;

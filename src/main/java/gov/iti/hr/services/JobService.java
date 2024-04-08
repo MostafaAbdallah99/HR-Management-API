@@ -5,6 +5,7 @@ import gov.iti.hr.exceptions.InvalidPaginationException;
 import gov.iti.hr.exceptions.ResourceNotFoundException;
 import gov.iti.hr.mappers.JobMapper;
 import gov.iti.hr.models.JobDTO;
+import gov.iti.hr.models.validation.BeanValidator;
 import gov.iti.hr.persistence.entities.Job;
 import gov.iti.hr.persistence.repository.TransactionManager;
 import gov.iti.hr.persistence.repository.repositories.JobRepositoryImpl;
@@ -65,7 +66,7 @@ public class JobService {
     }
 
     public List<JobDTO> getAllJobs(JobFilter jobFilter) {
-        validatePaginationParameters(jobFilter.getPaginationBean());
+        BeanValidator.validatePaginationParameters(jobFilter.getPaginationBean());
         return TransactionManager.doInTransaction(entityManager -> jobRepository.getAllJobs(entityManager, jobFilter)
                 .stream()
                 .map(JobMapper.INSTANCE::jobToJobDTO)
@@ -80,19 +81,6 @@ public class JobService {
         return TransactionManager.doInTransaction(entityManager -> jobRepository.findJobByName(jobTitle, entityManager)
                 .map(JobMapper.INSTANCE::jobToJobDTO)
                 .orElseThrow(() -> new ResourceNotFoundException("Job not found with title: " + jobTitle)));
-    }
-
-    private void validatePaginationParameters(PaginationBean paginationBean) {
-        boolean isLimitNegative = paginationBean.getLimit() < 0;
-        boolean isOffsetNegative = paginationBean.getOffset() < 0;
-
-        if (isLimitNegative && isOffsetNegative) {
-            throw new InvalidPaginationException("Both limit and offset cannot be negative");
-        } else if (isLimitNegative) {
-            throw new InvalidPaginationException("Limit cannot be negative");
-        } else if (isOffsetNegative) {
-            throw new InvalidPaginationException("Offset cannot be negative");
-        }
     }
 
     private void validateJobCreation(JobDTO jobDTO) {

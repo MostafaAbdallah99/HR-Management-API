@@ -12,6 +12,7 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 
 import java.util.List;
+import java.util.Optional;
 
 public class EmployeeRepositoryImpl extends GenericRepositoryImpl<Employee, Integer> implements EmployeeRepository {
     public EmployeeRepositoryImpl() {
@@ -29,5 +30,12 @@ public class EmployeeRepositoryImpl extends GenericRepositoryImpl<Employee, Inte
         jobTypedQuery.setFirstResult(filter.getOffset());
         jobTypedQuery.setMaxResults(filter.getLimit());
         return jobTypedQuery.getResultList();
+    }
+
+    @Override
+    public Optional<Employee> findByEmail(String email, EntityManager entityManager) {
+        return Optional.ofNullable(entityManager.createQuery("SELECT e FROM Employee e WHERE e.email = :email", Employee.class)
+                .setParameter("email", email)
+                .getSingleResult());
     }
 }

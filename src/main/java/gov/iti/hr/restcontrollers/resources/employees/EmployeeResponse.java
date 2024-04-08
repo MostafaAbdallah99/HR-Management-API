@@ -1,9 +1,6 @@
 package gov.iti.hr.restcontrollers.resources.employees;
 
-import gov.iti.hr.models.DepartmentDTO;
 import gov.iti.hr.models.EmployeeDTO;
-import gov.iti.hr.models.JobDTO;
-import gov.iti.hr.models.ManagerDTO;
 import gov.iti.hr.restcontrollers.adapter.JaxbLinkAdapter;
 import gov.iti.hr.restcontrollers.adapter.JsonbSingleLinkAdapter;
 import gov.iti.hr.restcontrollers.resources.departments.DepartmentResponse;
@@ -22,7 +19,7 @@ import lombok.ToString;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 
 @XmlRootElement(name = "employee")
 @XmlType(propOrder = {"employeeId", "firstName", "lastName", "email", "phoneNumber", "hireDate", "jobTitle", "salary", "vacationBalance", "managerName", "departmentName", "links"})
@@ -42,7 +39,7 @@ public class EmployeeResponse implements Serializable {
     @Getter
     private String phoneNumber;
     @Getter
-    private Date hireDate;
+    private LocalDate hireDate;
     @Getter
     private JobResponse jobResponse;
     @Getter
@@ -56,19 +53,18 @@ public class EmployeeResponse implements Serializable {
     @JsonbTypeAdapter(JsonbSingleLinkAdapter.class)
     private Link link;
 
-    public EmployeeResponse(EmployeeDTO employeeDTO, ManagerDTO managerDTO, JobDTO jobDTO, DepartmentDTO departmentDTO) {
+    public EmployeeResponse(EmployeeDTO employeeDTO) {
         this.employeeId = employeeDTO.employeeId();
         this.firstName = employeeDTO.firstName();
         this.lastName = employeeDTO.lastName();
         this.email = employeeDTO.email();
         this.phoneNumber = employeeDTO.phoneNumber();
         this.hireDate = employeeDTO.hireDate();
-        this.jobResponse = new JobResponse(jobDTO);
+        this.jobResponse = new JobResponse(employeeDTO.job());
         this.salary = employeeDTO.salary();
         this.vacationBalance = employeeDTO.vacationBalance();
-        this.departmentResponse = new DepartmentResponse(departmentDTO);
-        this.managerResponse = new ManagerResponse(managerDTO);
-        this.jobResponse = new JobResponse(jobDTO);
+        this.departmentResponse = new DepartmentResponse(employeeDTO.department());
+        this.managerResponse = new ManagerResponse(employeeDTO.manager());
         this.link = null;
     }
 

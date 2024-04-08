@@ -1,14 +1,18 @@
 package gov.iti.hr.services;
 
 import gov.iti.hr.exceptions.ResourceNotFoundException;
+import gov.iti.hr.filters.EmployeeFilter;
 import gov.iti.hr.filters.JobFilter;
 import gov.iti.hr.filters.interfaces.Filter;
 import gov.iti.hr.mappers.DepartmentMapper;
+import gov.iti.hr.mappers.EmployeeMapper;
 import gov.iti.hr.mappers.JobMapper;
 import gov.iti.hr.mappers.ManagerMapper;
 import gov.iti.hr.models.DepartmentDTO;
+import gov.iti.hr.models.EmployeeDTO;
 import gov.iti.hr.models.JobDTO;
 import gov.iti.hr.models.ManagerDTO;
+import gov.iti.hr.models.validation.BeanValidator;
 import gov.iti.hr.persistence.entities.Employee;
 import gov.iti.hr.persistence.entities.Job;
 import gov.iti.hr.persistence.repository.TransactionManager;
@@ -16,6 +20,7 @@ import gov.iti.hr.persistence.repository.repositories.DepartmentRepositoryImpl;
 import gov.iti.hr.persistence.repository.repositories.EmployeeRepositoryImpl;
 import gov.iti.hr.persistence.repository.repositories.JobRepositoryImpl;
 
+import java.util.AbstractMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,23 +59,51 @@ public class EmployeeService {
         });
     }
 
-    public Employee getEmployeeById(Integer employeeId) {
+    public EmployeeDTO getEmployeeById(Integer employeeId) {
         return TransactionManager.doInTransaction(entityManager -> employeeRepository.findById(employeeId, entityManager)
-                    .orElseThrow(() -> new ResourceNotFoundException(EMPLOYEE_NOT_FOUND_MSG + employeeId))
-        );
+                .map(EmployeeMapper.INSTANCE::employeeToEmployeeDTO)
+                .orElseThrow(() -> new ResourceNotFoundException(EMPLOYEE_NOT_FOUND_MSG + employeeId)));
     }
 
-    public Integer saveEmployee(Employee employee) {
+    public AbstractMap.SimpleEntry<Integer, EmployeeDTO> saveEmployee(EmployeeDTO employeeDTO) {
         return TransactionManager.doInTransaction(entityManager -> {
-            if(employeeRepository.save(employee, entityManager)) {
-                return employee.getEmployeeId();
+            DepartmentDTO departmentDTO = departmentRepository.findByName(employeeDTO.departmentName(), entityManager)
+                    .map(DepartmentMapper.INSTANCE::departmentToDepartmentDTO)
+                    .orElseThrow(() -> new ResourceNotFoundException("Department not found"));
+            JobDTO jobDTO = jobRepository.findJobByName(employeeDTO.jobName(), entityManager)
+                    .map(JobMapper.INSTANCE::jobToJobDTO)
+                    .orElseThrow(() -> new ResourceNotFoundException("Job not found"));
+            ManagerDTO managerDTO = employeeRepository.findByEmail(employeeDTO.managerEmail(), entityManager)
+                    .map(ManagerMapper.INSTANCE::managerToManagerDTO)
+                    .orElseThrow(() -> new ResourceNotFoundException("Manager not found"));
+
+            EmployeeDTO newEmployeeDTO = new EmployeeDTO(
+                    employeeDTO.employeeId(),
+                    employeeDTO.firstName(),
+                    employeeDTO.lastName(),
+                    employeeDTO.email(),
+                    employeeDTO.phoneNumber(),
+                    employeeDTO.hireDate(),
+                    employeeDTO.salary(),
+                    employeeDTO.vacationBalance(),
+                    employeeDTO.gender(),
+                    employeeDTO.managerEmail(),
+                    employeeDTO.jobName(),
+                    employeeDTO.departmentName(),
+                    managerDTO,
+                    jobDTO,
+                    departmentDTO
+            );
+            Employee employee = EmployeeMapper.INSTANCE.employeeDTOToEmployee(newEmployeeDTO);
+            if (employeeRepository.save(employee, entityManager)) {
+                return new AbstractMap.SimpleEntry<>(employee.getEmployeeId(), newEmployeeDTO);
             } else {
-                throw new ResourceNotFoundException("Employee creation failed");
+                throw new ResourceNotFoundException("Manager creation failed");
             }
         });
     }
 
-    public Integer saveManager(ManagerDTO managerDTO) {
+    public AbstractMap.SimpleEntry<Integer, ManagerDTO> saveManager(ManagerDTO managerDTO) {
         return TransactionManager.doInTransaction(entityManager -> {
             DepartmentDTO departmentDTO = departmentRepository.findByName(managerDTO.departmentName(), entityManager)
                     .map(DepartmentMapper.INSTANCE::departmentToDepartmentDTO)
@@ -79,7 +112,7 @@ public class EmployeeService {
                     .map(JobMapper.INSTANCE::jobToJobDTO)
                     .orElseThrow(() -> new ResourceNotFoundException("Job not found"));
             ManagerDTO newManagerDTO = new ManagerDTO(
-                    managerDTO.managerId(),
+                    managerDTO.employeeId(),
                     managerDTO.firstName(),
                     managerDTO.lastName(),
                     managerDTO.email(),
@@ -92,15 +125,23 @@ public class EmployeeService {
                     managerDTO.departmentName(), departmentDTO, jobDTO);
             Employee employee = ManagerMapper.INSTANCE.managerDTOToManager(newManagerDTO);
             if (employeeRepository.save(employee, entityManager)) {
-                return employee.getEmployeeId();
+                return new AbstractMap.SimpleEntry<>(employee.getEmployeeId(), newManagerDTO);
             } else {
                 throw new ResourceNotFoundException("Manager creation failed");
             }
         });
     }
 
-    public List<Employee> getAllEmployees(Filter filter) {
-        return TransactionManager.doInTransaction(entityManager -> employeeRepository.findAll(entityManager, filter));
+    public List<EmployeeDTO> getAllEmployees(EmployeeFilter employeeFilter) {
+        BeanValidator.validatePaginationParameters(employeeFilter.getPaginationBean());
+        return TransactionManager.doInTransaction(entityManager -> employeeRepository.findAll(entityManager, employeeFilter)
+                .stream()
+                .map(EmployeeMapper.INSTANCE::employeeToEmployeeDTO)
+                .toList());
+    }
+
+    public Integer getEmployeesCount() {
+        return TransactionManager.doInTransaction(employeeRepository::count);
     }
 
 

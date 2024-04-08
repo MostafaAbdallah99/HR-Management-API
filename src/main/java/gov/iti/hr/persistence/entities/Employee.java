@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Objects;
 
@@ -36,7 +37,7 @@ public class Employee {
 
     @Column(name = "hire_date", nullable = false)
     @Temporal(TemporalType.DATE)
-    private Date hireDate;
+    private LocalDate hireDate;
 
     @Column(name ="salary", nullable = false, precision = 8, scale = 2)
     private BigDecimal salary;

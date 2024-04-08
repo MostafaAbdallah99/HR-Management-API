@@ -1,8 +1,11 @@
 package gov.iti.hr.restcontrollers.resources.employees;
 
+
 import gov.iti.hr.models.ManagerDTO;
 import gov.iti.hr.restcontrollers.adapter.JaxbLinkAdapter;
 import gov.iti.hr.restcontrollers.adapter.JsonbSingleLinkAdapter;
+import gov.iti.hr.restcontrollers.resources.departments.DepartmentResponse;
+import gov.iti.hr.restcontrollers.resources.jobs.JobResponse;
 import jakarta.json.bind.annotation.JsonbPropertyOrder;
 import jakarta.json.bind.annotation.JsonbTypeAdapter;
 import jakarta.ws.rs.core.Link;
@@ -18,7 +21,6 @@ import lombok.ToString;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Date;
 
 @XmlRootElement(name = "employee")
 @XmlType(propOrder = {"employeeId", "firstName", "lastName", "email", "phoneNumber", "hireDate", "jobTitle", "salary", "vacationBalance", "departmentName", "links"})
@@ -43,12 +45,19 @@ public class ManagerResponse implements Serializable {
     private BigDecimal salary;
     @Getter
     private Integer vacationBalance;
+    @Getter
+    private JobResponse jobResponse;
+    @Getter
+    private DepartmentResponse departmentResponse;
     @JsonbTypeAdapter(JsonbSingleLinkAdapter.class)
     private Link link;
 
 
     public ManagerResponse(ManagerDTO managerDTO) {
-        this.employeeId = managerDTO.managerId();
+        if (managerDTO == null) {
+            return;
+        }
+        this.employeeId = managerDTO.employeeId();
         this.firstName = managerDTO.firstName();
         this.lastName = managerDTO.lastName();
         this.email = managerDTO.email();
@@ -56,6 +65,8 @@ public class ManagerResponse implements Serializable {
         this.hireDate = managerDTO.hireDate();
         this.salary = managerDTO.salary();
         this.vacationBalance = managerDTO.vacationBalance();
+        this.jobResponse = new JobResponse(managerDTO.job());
+        this.departmentResponse = new DepartmentResponse(managerDTO.department());
         this.link = null;
     }
 

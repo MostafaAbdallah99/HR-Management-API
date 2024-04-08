@@ -7,10 +7,9 @@ import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Date;
 
 public record ManagerDTO (
-        Integer managerId,
+        Integer employeeId,
         @NotNull(message = "First name is required")
         String firstName,
         @NotNull(message = "Last name is required")
@@ -40,6 +39,6 @@ public record ManagerDTO (
 ) implements DTO {
     @Override
     public Integer getDTOId() {
-        return managerId();
+        return employeeId();
     }
 }
