@@ -2,8 +2,6 @@ package gov.iti.hr.restcontrollers.resources.interfaces;
 
 import gov.iti.hr.filters.DepartmentFilter;
 import gov.iti.hr.models.DepartmentDTO;
-import gov.iti.hr.models.JobDTO;
-import gov.iti.hr.restcontrollers.beans.PaginationBean;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
 

@@ -1,11 +1,9 @@
 package gov.iti.hr.filters;
 
-import gov.iti.hr.filters.interfaces.Filter;
-import gov.iti.hr.restcontrollers.beans.PaginationBean;
+import gov.iti.hr.filters.base.Filter;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
-import jakarta.ws.rs.BeanParam;
 import jakarta.ws.rs.QueryParam;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,36 +19,26 @@ import java.util.Optional;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class EmployeeVacationFilter implements Filter {
-    @BeanParam
-    private PaginationBean paginationBean;
+public class EmployeeVacationFilter extends Filter {
     @QueryParam("vacationStartDate")
     private Date vacationStartDate;
     @QueryParam("vacationEndDate")
     private Date vacationEndDate;
+
     @Override
-    public <T> List<Predicate> getPredicates(CriteriaBuilder cb, Root<T> root) {
+    public <T> List<Predicate> getPredicates(CriteriaBuilder cb, Root<T> employeeVacationRoot) {
         List<Predicate> predicates = new ArrayList<>();
 
         Optional.ofNullable(vacationStartDate).ifPresent(date ->
-                predicates.add(cb.equal(root.get("vacationStartDate"), date))
+                predicates.add(cb.equal(employeeVacationRoot.get("vacationStartDate"), date))
         );
 
         Optional.ofNullable(vacationEndDate).ifPresent(date ->
-                predicates.add(cb.equal(root.get("vacationEndDate"), date))
+                predicates.add(cb.equal(employeeVacationRoot.get("vacationEndDate"), date))
         );
 
 
         return predicates;
     }
 
-    @Override
-    public Integer getOffset() {
-        return paginationBean.getOffset();
-    }
-
-    @Override
-    public Integer getLimit() {
-        return paginationBean.getLimit();
-    }
 }

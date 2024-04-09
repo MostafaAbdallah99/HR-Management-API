@@ -1,6 +1,6 @@
 package gov.iti.hr.persistence.repository.generic;
 
-import gov.iti.hr.filters.interfaces.Filter;
+import gov.iti.hr.filters.base.Filter;
 import gov.iti.hr.persistence.entities.base.BaseEntity;
 import jakarta.persistence.EntityManager;
 

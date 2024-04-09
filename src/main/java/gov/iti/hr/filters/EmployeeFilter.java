@@ -1,12 +1,10 @@
 package gov.iti.hr.filters;
 
-import gov.iti.hr.filters.interfaces.Filter;
+import gov.iti.hr.filters.base.Filter;
 import gov.iti.hr.persistence.entities.enums.Gender;
-import gov.iti.hr.restcontrollers.beans.PaginationBean;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
-import jakarta.ws.rs.BeanParam;
 import jakarta.ws.rs.QueryParam;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,9 +21,7 @@ import java.util.Optional;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class EmployeeFilter implements Filter {
-    @BeanParam
-    private PaginationBean paginationBean;
+public class EmployeeFilter extends Filter {
     @QueryParam("firstName")
     private String firstName;
     @QueryParam("lastName")
@@ -42,6 +38,7 @@ public class EmployeeFilter implements Filter {
     private Integer vacationBalance;
     @QueryParam("gender")
     private Gender gender;
+
     public <T> List<Predicate> getPredicates(CriteriaBuilder cb, Root<T> employeeRoot) {
         List<Predicate> predicates = new ArrayList<>();
 
@@ -78,13 +75,4 @@ public class EmployeeFilter implements Filter {
         return predicates;
     }
 
-    @Override
-    public Integer getOffset() {
-        return paginationBean.getOffset();
-    }
-
-    @Override
-    public Integer getLimit() {
-        return paginationBean.getLimit();
-    }
 }
