@@ -1,5 +1,6 @@
 package gov.iti.hr.restcontrollers.resources.interfaces;
 
+import gov.iti.hr.filters.DepartmentFilter;
 import gov.iti.hr.models.DepartmentDTO;
 import gov.iti.hr.models.JobDTO;
 import gov.iti.hr.restcontrollers.beans.PaginationBean;
@@ -12,7 +13,7 @@ public interface DepartmentResource {
     Response getDepartment(@PathParam("id") Integer id);
 
     @GET
-    Response getDepartments(@BeanParam PaginationBean paginationBean);
+    Response getDepartments(@BeanParam DepartmentFilter departmentFilter);
 
     @POST
     Response addDepartment(DepartmentDTO departmentDTO);

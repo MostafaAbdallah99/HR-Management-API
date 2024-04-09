@@ -3,6 +3,7 @@ package gov.iti.hr.restcontrollers.resources.departments;
 import gov.iti.hr.models.DepartmentDTO;
 import gov.iti.hr.restcontrollers.adapter.JaxbLinkAdapter;
 import gov.iti.hr.restcontrollers.adapter.JsonbSingleLinkAdapter;
+import gov.iti.hr.restcontrollers.resources.employees.ManagerResponse;
 import jakarta.json.bind.annotation.JsonbPropertyOrder;
 import jakarta.json.bind.annotation.JsonbTypeAdapter;
 import jakarta.ws.rs.core.Link;
@@ -27,14 +28,17 @@ public class DepartmentResponse {
     @Getter
     private String departmentName;
     @Getter
-    private String managerName;
+    private Integer managerId;
+    @Getter
+    private ManagerResponse manager;
     @JsonbTypeAdapter(JsonbSingleLinkAdapter.class)
     private Link link;
 
     public DepartmentResponse(DepartmentDTO departmentDTO) {
         this.departmentId = departmentDTO.departmentId();
         this.departmentName = departmentDTO.departmentName();
-        //this.managerName = departmentDTO.managerName();
+        this.manager = new ManagerResponse(departmentDTO.managerDTO());
+        this.managerId = departmentDTO.managerId();
         this.link = null;
     }
 

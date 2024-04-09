@@ -54,7 +54,7 @@ public class Employee implements BaseEntity {
     private Job job;
 
     @ManyToOne
-    @JoinColumn(name = "department_id", nullable = false)
+    @JoinColumn(name = "department_id")
     private Department department;
 
     @ManyToOne

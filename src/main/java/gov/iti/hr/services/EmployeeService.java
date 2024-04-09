@@ -48,8 +48,9 @@ public class EmployeeService {
         TransactionManager.doInTransactionWithoutResult(employeeRepository::deleteAll);
     }
 
-    public void updateEmployee(Employee employee) {
+    public void updateEmployee(EmployeeDTO employeeDTO) {
         TransactionManager.doInTransactionWithoutResult(entityManager -> {
+            Employee employee = EmployeeMapper.INSTANCE.employeeDTOToEmployee(employeeDTO);
             if(!employeeRepository.update(employee, entityManager)) {
                 throw new ResourceNotFoundException(EMPLOYEE_NOT_FOUND_MSG + employee.getEmployeeId());
             }
