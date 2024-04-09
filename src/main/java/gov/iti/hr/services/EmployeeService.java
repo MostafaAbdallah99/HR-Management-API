@@ -2,8 +2,6 @@ package gov.iti.hr.services;
 
 import gov.iti.hr.exceptions.ResourceNotFoundException;
 import gov.iti.hr.filters.EmployeeFilter;
-import gov.iti.hr.filters.JobFilter;
-import gov.iti.hr.filters.interfaces.Filter;
 import gov.iti.hr.mappers.DepartmentMapper;
 import gov.iti.hr.mappers.EmployeeMapper;
 import gov.iti.hr.mappers.JobMapper;
@@ -14,7 +12,6 @@ import gov.iti.hr.models.JobDTO;
 import gov.iti.hr.models.ManagerDTO;
 import gov.iti.hr.models.validation.BeanValidator;
 import gov.iti.hr.persistence.entities.Employee;
-import gov.iti.hr.persistence.entities.Job;
 import gov.iti.hr.persistence.repository.TransactionManager;
 import gov.iti.hr.persistence.repository.repositories.DepartmentRepositoryImpl;
 import gov.iti.hr.persistence.repository.repositories.EmployeeRepositoryImpl;
@@ -134,7 +131,7 @@ public class EmployeeService {
 
     public List<EmployeeDTO> getAllEmployees(EmployeeFilter employeeFilter) {
         BeanValidator.validatePaginationParameters(employeeFilter.getPaginationBean());
-        return TransactionManager.doInTransaction(entityManager -> employeeRepository.findAll(entityManager, employeeFilter)
+        return TransactionManager.doInTransaction(entityManager -> employeeRepository.findAll(entityManager, employeeFilter, Employee.class)
                 .stream()
                 .map(EmployeeMapper.INSTANCE::employeeToEmployeeDTO)
                 .toList());

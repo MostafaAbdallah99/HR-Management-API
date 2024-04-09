@@ -1,12 +1,13 @@
 package gov.iti.hr.persistence.entities;
 
+import gov.iti.hr.persistence.entities.base.BaseEntity;
 import gov.iti.hr.persistence.entities.enums.VacationStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Objects;
 
 @Getter
@@ -14,7 +15,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @Entity
 @Table(name = "employee_vacation")
-public class EmployeeVacation {
+public class EmployeeVacation implements BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "vacation_id", nullable = false)
@@ -22,11 +23,11 @@ public class EmployeeVacation {
 
     @Column(name = "vacation_start_date", nullable = false)
     @Temporal(TemporalType.DATE)
-    private Date vacationStartDate;
+    private LocalDate vacationStartDate;
 
     @Column(name = "vacation_end_date", nullable = false)
     @Temporal(TemporalType.DATE)
-    private Date vacationEndDate;
+    private LocalDate vacationEndDate;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "vacation_status", nullable = false, length = 50)

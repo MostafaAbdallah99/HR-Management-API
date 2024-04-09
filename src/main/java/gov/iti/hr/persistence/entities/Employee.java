@@ -1,6 +1,7 @@
 package gov.iti.hr.persistence.entities;
 
 
+import gov.iti.hr.persistence.entities.base.BaseEntity;
 import gov.iti.hr.persistence.entities.enums.Gender;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -9,7 +10,6 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.Objects;
 
 @Getter
@@ -17,7 +17,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @Table(name = "employees")
 @Entity
-public class Employee {
+public class Employee implements BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "employee_id", nullable = false)

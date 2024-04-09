@@ -1,11 +1,12 @@
 package gov.iti.hr.persistence.entities;
 
+import gov.iti.hr.persistence.entities.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Objects;
 
 @Getter
@@ -13,7 +14,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @Table(name = "job_history")
 @Entity
-public class JobHistory {
+public class JobHistory implements BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "job_history_id", nullable = false)
@@ -21,11 +22,11 @@ public class JobHistory {
 
     @Column(name = "start_date", nullable = false)
     @Temporal(TemporalType.DATE)
-    private Date startDate;
+    private LocalDate startDate;
 
     @Column(name = "end_date")
     @Temporal(TemporalType.DATE)
-    private Date endDate;
+    private LocalDate endDate;
 
     @ManyToOne
     @JoinColumn(name = "job_id", nullable = false)

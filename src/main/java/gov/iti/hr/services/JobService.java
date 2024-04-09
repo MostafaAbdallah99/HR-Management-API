@@ -1,7 +1,6 @@
 package gov.iti.hr.services;
 
 import gov.iti.hr.exceptions.EntityCreationException;
-import gov.iti.hr.exceptions.InvalidPaginationException;
 import gov.iti.hr.exceptions.ResourceNotFoundException;
 import gov.iti.hr.mappers.JobMapper;
 import gov.iti.hr.models.JobDTO;
@@ -9,7 +8,6 @@ import gov.iti.hr.models.validation.BeanValidator;
 import gov.iti.hr.persistence.entities.Job;
 import gov.iti.hr.persistence.repository.TransactionManager;
 import gov.iti.hr.persistence.repository.repositories.JobRepositoryImpl;
-import gov.iti.hr.restcontrollers.beans.PaginationBean;
 import gov.iti.hr.filters.JobFilter;
 
 import java.util.List;
@@ -67,20 +65,14 @@ public class JobService {
 
     public List<JobDTO> getAllJobs(JobFilter jobFilter) {
         BeanValidator.validatePaginationParameters(jobFilter.getPaginationBean());
-        return TransactionManager.doInTransaction(entityManager -> jobRepository.getAllJobs(entityManager, jobFilter)
+        return TransactionManager.doInTransaction(entityManager -> jobRepository.findAll(entityManager, jobFilter, Job.class)
                 .stream()
                 .map(JobMapper.INSTANCE::jobToJobDTO)
                 .toList());
     }
 
     public Integer getJobsCount() {
-        return TransactionManager.doInTransaction(jobRepository::getJobsCount);
-    }
-
-    public JobDTO getJobByTitle(String jobTitle) {
-        return TransactionManager.doInTransaction(entityManager -> jobRepository.findJobByName(jobTitle, entityManager)
-                .map(JobMapper.INSTANCE::jobToJobDTO)
-                .orElseThrow(() -> new ResourceNotFoundException("Job not found with title: " + jobTitle)));
+        return TransactionManager.doInTransaction(jobRepository::count);
     }
 
     private void validateJobCreation(JobDTO jobDTO) {

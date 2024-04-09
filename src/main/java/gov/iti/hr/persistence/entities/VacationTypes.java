@@ -1,5 +1,6 @@
 package gov.iti.hr.persistence.entities;
 
+import gov.iti.hr.persistence.entities.base.BaseEntity;
 import gov.iti.hr.persistence.entities.enums.VacationType;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -13,7 +14,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @Entity
 @Table(name = "vacation_types")
-public class VacationTypes {
+public class VacationTypes implements BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "vacation_type_id", nullable = false)

@@ -1,5 +1,6 @@
 package gov.iti.hr.persistence.entities;
 
+import gov.iti.hr.persistence.entities.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +13,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @Table(name = "jobs")
 @Entity
-public class Job {
+public class Job implements BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "job_id", nullable = false)
