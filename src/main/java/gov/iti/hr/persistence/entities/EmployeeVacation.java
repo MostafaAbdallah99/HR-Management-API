@@ -1,7 +1,6 @@
 package gov.iti.hr.persistence.entities;
 
 import gov.iti.hr.persistence.entities.base.BaseEntity;
-import gov.iti.hr.persistence.entities.enums.VacationStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,17 +28,9 @@ public class EmployeeVacation implements BaseEntity {
     @Temporal(TemporalType.DATE)
     private LocalDate vacationEndDate;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "vacation_status", nullable = false, length = 50)
-    private VacationStatus vacationStatus;
-
     @ManyToOne
     @JoinColumn(name = "employee_id", nullable = false)
     private Employee employee;
-
-    @ManyToOne
-    @JoinColumn(name = "vacation_type_id", nullable = false)
-    private VacationTypes vacationType;
 
     @Override
     public boolean equals(Object o) {

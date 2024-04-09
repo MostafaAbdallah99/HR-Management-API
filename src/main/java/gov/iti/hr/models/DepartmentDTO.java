@@ -7,7 +7,6 @@ public record DepartmentDTO(
         Integer departmentId,
         @NotNull(message = "Department name is required")
         String departmentName,
-        @NotNull(message = "Manager ID is required")
         Integer managerId,
         ManagerDTO managerDTO
 ) implements DTO {

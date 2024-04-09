@@ -12,9 +12,7 @@ https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
         <class>gov.iti.hr.persistence.entities.Job</class>
         <class>gov.iti.hr.persistence.entities.Employee</class>
         <class>gov.iti.hr.persistence.entities.Department</class>
-        <class>gov.iti.hr.persistence.entities.JobHistory</class>
         <class>gov.iti.hr.persistence.entities.EmployeeVacation</class>
-        <class>gov.iti.hr.persistence.entities.VacationTypes</class>
 
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
 

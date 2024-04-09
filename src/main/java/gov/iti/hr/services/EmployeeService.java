@@ -1,22 +1,20 @@
 package gov.iti.hr.services;
 
+import gov.iti.hr.exceptions.BadRequestException;
 import gov.iti.hr.exceptions.ResourceNotFoundException;
 import gov.iti.hr.filters.EmployeeFilter;
-import gov.iti.hr.mappers.DepartmentMapper;
-import gov.iti.hr.mappers.EmployeeMapper;
-import gov.iti.hr.mappers.JobMapper;
-import gov.iti.hr.mappers.ManagerMapper;
-import gov.iti.hr.models.DepartmentDTO;
-import gov.iti.hr.models.EmployeeDTO;
-import gov.iti.hr.models.JobDTO;
-import gov.iti.hr.models.ManagerDTO;
+import gov.iti.hr.mappers.*;
+import gov.iti.hr.models.*;
 import gov.iti.hr.models.validation.BeanValidator;
 import gov.iti.hr.persistence.entities.Employee;
+import gov.iti.hr.persistence.entities.EmployeeVacation;
 import gov.iti.hr.persistence.repository.TransactionManager;
 import gov.iti.hr.persistence.repository.repositories.DepartmentRepositoryImpl;
 import gov.iti.hr.persistence.repository.repositories.EmployeeRepositoryImpl;
+import gov.iti.hr.persistence.repository.repositories.EmployeeVacationRepositoryImpl;
 import gov.iti.hr.persistence.repository.repositories.JobRepositoryImpl;
 
+import java.time.temporal.ChronoUnit;
 import java.util.AbstractMap;
 import java.util.List;
 import java.util.Optional;
@@ -25,12 +23,14 @@ public class EmployeeService {
     private final EmployeeRepositoryImpl employeeRepository;
     private final JobRepositoryImpl jobRepository;
     private final DepartmentRepositoryImpl departmentRepository;
+    private final EmployeeVacationRepositoryImpl employeeVacationRepository;
     private static final String EMPLOYEE_NOT_FOUND_MSG = "Employee not found with id: ";
 
     public EmployeeService() {
         employeeRepository = new EmployeeRepositoryImpl();
         jobRepository = new JobRepositoryImpl();
         departmentRepository = new DepartmentRepositoryImpl();
+        employeeVacationRepository = new EmployeeVacationRepositoryImpl();
     }
 
     public void deleteEmployee(Integer employeeId) {
@@ -142,5 +142,26 @@ public class EmployeeService {
         return TransactionManager.doInTransaction(employeeRepository::count);
     }
 
-
+    public void addVacation(Integer employeeId, EmployeeVacationDTO employeeVacationDTO) {
+        TransactionManager.doInTransactionWithoutResult(entityManager -> {
+            Employee employee = employeeRepository.findById(employeeId, entityManager)
+                    .orElseThrow(() -> new ResourceNotFoundException(EMPLOYEE_NOT_FOUND_MSG + employeeId));
+            Long vacationDays = ChronoUnit.DAYS.between(employeeVacationDTO.vacationStartDate(), employeeVacationDTO.vacationEndDate());
+            if(employee.getVacationBalance() < vacationDays) {
+                throw new BadRequestException("Vacation balance is not enough");
+            } else {
+                employee.setVacationBalance(employee.getVacationBalance() - vacationDays.intValue());
+                employeeRepository.update(employee, entityManager);
+                EmployeeDTO employeeDTO = EmployeeMapper.INSTANCE.employeeToEmployeeDTO(employee);
+                EmployeeVacationDTO newEmployeeVacationDTO = new EmployeeVacationDTO(
+                        employeeVacationDTO.vacationId(),
+                        employeeVacationDTO.vacationStartDate(),
+                        employeeVacationDTO.vacationEndDate(),
+                        employeeDTO
+                );
+                EmployeeVacation employeeVacation = EmployeeVacationMapper.INSTANCE.employeeVacationDTOToEmployeeVacation(newEmployeeVacationDTO);
+                employeeVacationRepository.save(employeeVacation, entityManager);
+            }
+        });
+    }
 }

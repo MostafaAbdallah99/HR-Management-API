@@ -1,7 +1,7 @@
 package gov.iti.hr.models.validation;
 
 import gov.iti.hr.exceptions.EntityCreationException;
-import gov.iti.hr.exceptions.InvalidPaginationException;
+import gov.iti.hr.exceptions.BadRequestException;
 import gov.iti.hr.models.dto.DTO;
 import gov.iti.hr.restcontrollers.beans.PaginationBean;
 import jakarta.validation.ConstraintViolation;
@@ -48,11 +48,11 @@ public class BeanValidator {
         boolean isOffsetNegative = paginationBean.getOffset() < 0;
 
         if (isLimitNegative && isOffsetNegative) {
-            throw new InvalidPaginationException("Both limit and offset cannot be negative");
+            throw new BadRequestException("Both limit and offset cannot be negative");
         } else if (isLimitNegative) {
-            throw new InvalidPaginationException("Limit cannot be negative");
+            throw new BadRequestException("Limit cannot be negative");
         } else if (isOffsetNegative) {
-            throw new InvalidPaginationException("Offset cannot be negative");
+            throw new BadRequestException("Offset cannot be negative");
         }
     }
 }

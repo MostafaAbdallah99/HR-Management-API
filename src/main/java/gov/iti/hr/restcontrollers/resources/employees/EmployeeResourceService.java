@@ -2,6 +2,7 @@ package gov.iti.hr.restcontrollers.resources.employees;
 
 import gov.iti.hr.filters.EmployeeFilter;
 import gov.iti.hr.models.EmployeeDTO;
+import gov.iti.hr.models.EmployeeVacationDTO;
 import gov.iti.hr.models.ManagerDTO;
 import gov.iti.hr.models.validation.BeanValidator;
 import gov.iti.hr.restcontrollers.resources.departments.DepartmentResourceService;
@@ -100,5 +101,13 @@ public class EmployeeResourceService implements EmployeeResource {
     @Override
     public Response updateEmployee(Integer id, EmployeeDTO employeeDTO) {
         return null;
+    }
+
+    @Override
+    public Response addVacation(Integer id, EmployeeVacationDTO employeeVacationDTO) {
+        BeanValidator.validateBean(employeeVacationDTO);
+        BeanValidator.validateID(employeeVacationDTO, HttpMethod.POST);
+        employeeService.addVacation(id, employeeVacationDTO);
+        return Response.ok("Vacation is Accepted").build();
     }
 }
