@@ -1,6 +1,6 @@
 package gov.iti.hr.exceptions.exceptionmappers;
 
-import gov.iti.hr.exceptions.generic.BaseException;
+import gov.iti.hr.exceptions.base.BaseException;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;

@@ -9,7 +9,8 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "job")
 public record JobDTO (
         Integer jobId,
-        @NotEmpty(message = "You must provide Job Title") String jobTitle,
+        @NotEmpty(message = "You must provide Job Title")
+        String jobTitle,
         @Min(message = "You must provide zero or positive minimum salary", value = 0)
         @NotNull(message = "You must provide minimum salary")
         Integer minSalary,

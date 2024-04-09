@@ -1,6 +1,6 @@
 package gov.iti.hr.exceptions;
 
-import gov.iti.hr.exceptions.generic.BaseException;
+import gov.iti.hr.exceptions.base.BaseException;
 
 public class ResourceNotFoundException extends BaseException {
     public ResourceNotFoundException(String message) {

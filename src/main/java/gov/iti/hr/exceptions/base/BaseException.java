@@ -1,4 +1,4 @@
-package gov.iti.hr.exceptions.generic;
+package gov.iti.hr.exceptions.base;
 
 import lombok.Getter;
 
