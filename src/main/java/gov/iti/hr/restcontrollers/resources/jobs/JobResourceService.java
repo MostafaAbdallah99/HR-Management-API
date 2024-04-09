@@ -50,7 +50,7 @@ public class JobResourceService implements JobResource {
     @Override
     public Response addJob(JobDTO jobDTO) {
         BeanValidator.validateBean(jobDTO);
-        BeanValidator.validateID(jobDTO, HttpMethod.POST);
+        BeanValidator.validateID(jobDTO);
         Integer jobId = jobService.saveJob(jobDTO);
         JobDTO newJobDTO = new JobDTO(jobId, jobDTO.jobTitle(), jobDTO.minSalary(), jobDTO.maxSalary());
         JobResponse jobResponse = new JobResponse(newJobDTO);
@@ -74,9 +74,8 @@ public class JobResourceService implements JobResource {
     @Override
     public Response updateJob(Integer id, JobDTO jobDTO) {
         BeanValidator.validateBean(jobDTO);
-        BeanValidator.validateID(jobDTO, HttpMethod.PUT);
         JobDTO updatedJobDTO = new JobDTO(id, jobDTO.jobTitle(), jobDTO.minSalary(), jobDTO.maxSalary());
-        jobService.updateJob(updatedJobDTO);
+        jobService.updateJob(id, updatedJobDTO);
         JobResponse jobResponse = new JobResponse(updatedJobDTO);
         jobResponse.setLink(LinksUtil.createSelfLink(uriInfo, JobResourceService.class, id.toString()));
         return Response.ok(jobResponse).build();

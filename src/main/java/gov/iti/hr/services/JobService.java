@@ -1,5 +1,6 @@
 package gov.iti.hr.services;
 
+import gov.iti.hr.exceptions.BadRequestException;
 import gov.iti.hr.exceptions.EntityCreationException;
 import gov.iti.hr.exceptions.ResourceNotFoundException;
 import gov.iti.hr.mappers.JobMapper;
@@ -7,6 +8,7 @@ import gov.iti.hr.models.JobDTO;
 import gov.iti.hr.models.validation.BeanValidator;
 import gov.iti.hr.persistence.entities.Job;
 import gov.iti.hr.persistence.repository.TransactionManager;
+import gov.iti.hr.persistence.repository.repositories.EmployeeRepositoryImpl;
 import gov.iti.hr.persistence.repository.repositories.JobRepositoryImpl;
 import gov.iti.hr.filters.JobFilter;
 
@@ -15,10 +17,12 @@ import java.util.Optional;
 
 public class JobService {
     private final JobRepositoryImpl jobRepository;
+    private final EmployeeRepositoryImpl employeeRepository;
     private static final String JOB_NOT_FOUND_MSG = "Job not found with id: ";
 
     public JobService() {
         jobRepository = new JobRepositoryImpl();
+        employeeRepository = new EmployeeRepositoryImpl();
     }
 
     public Integer saveJob(JobDTO jobDTO) {
@@ -28,7 +32,7 @@ public class JobService {
             if(jobRepository.save(job, entityManager)) {
                 return job.getJobId();
             } else {
-                throw new EntityCreationException("Job creation failed");
+                throw new EntityCreationException("Duplicate Entry for job title");
             }
         });
     }
@@ -36,24 +40,33 @@ public class JobService {
     public void deleteJob(Integer jobId) {
         TransactionManager.doInTransactionWithoutResult(entityManager -> {
             Optional<Job> job = jobRepository.findById(jobId, entityManager);
-            job.ifPresent(j -> {
-                if(!jobRepository.delete(j, entityManager)) {
-                    throw new ResourceNotFoundException(JOB_NOT_FOUND_MSG + jobId);
-                }
-            });
+            Optional.ofNullable(job).orElseThrow(() -> new ResourceNotFoundException("Job not found"))
+                    .ifPresent(j -> {
+                        employeeRepository.makeEmployeeUnemployed(j.getJobId(), entityManager);
+                        jobRepository.delete(j, entityManager);
+                    });
         });
     }
 
     public void deleteAll() {
-        TransactionManager.doInTransactionWithoutResult(jobRepository::deleteAll);
+        TransactionManager.doInTransactionWithoutResult(entityManager -> {
+            employeeRepository.makeEmployeesUnemployed(entityManager);
+            jobRepository.deleteAll(entityManager);
+        });
     }
 
-    public void updateJob(JobDTO jobDTO) {
+    public void updateJob(Integer jobId, JobDTO jobDTO) {
         TransactionManager.doInTransactionWithoutResult(entityManager -> {
-            Job job = JobMapper.INSTANCE.jobDTOToJob(jobDTO);
-            if(!jobRepository.update(job, entityManager)) {
-                throw new ResourceNotFoundException(JOB_NOT_FOUND_MSG + jobDTO.jobId());
-            }
+            validateJobCreation(jobDTO);
+
+
+            jobRepository.findById(jobId, entityManager).ifPresentOrElse(j -> {
+                Job job = JobMapper.INSTANCE.jobDTOToJob(jobDTO);
+                jobRepository.update(job, entityManager);
+            }, () -> {
+                throw new ResourceNotFoundException(JOB_NOT_FOUND_MSG + jobId);
+            });
+
         });
     }
 
@@ -77,7 +90,7 @@ public class JobService {
 
     private void validateJobCreation(JobDTO jobDTO) {
         if(jobDTO.maxSalary() < jobDTO.minSalary()) {
-            throw new EntityCreationException("Max salary cannot be less than min salary");
+            throw new BadRequestException("Max salary cannot be less than min salary");
         }
     }
 }

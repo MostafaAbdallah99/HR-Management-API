@@ -50,7 +50,7 @@ public class Employee implements BaseEntity {
     private Gender gender;
 
     @ManyToOne
-    @JoinColumn(name = "job_id", nullable = false)
+    @JoinColumn(name = "job_id")
     private Job job;
 
     @ManyToOne

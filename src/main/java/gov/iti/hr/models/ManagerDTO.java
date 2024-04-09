@@ -32,7 +32,6 @@ public record ManagerDTO (
         Gender gender,
         @NotNull(message = "Job is required")
         String jobName,
-        @NotNull(message = "Department is required")
         String departmentName,
         DepartmentDTO department,
         JobDTO job

@@ -13,8 +13,12 @@ public class JobRepositoryImpl extends GenericRepositoryImpl<Job, Integer> imple
 
     @Override
     public Optional<Job> findJobByName(String jobTitle, EntityManager entityManager) {
-        return Optional.ofNullable(entityManager.createQuery("SELECT j FROM Job j WHERE j.jobTitle = :jobTitle", Job.class)
-                .setParameter("jobTitle", jobTitle)
-                .getSingleResult());
+        try {
+            return Optional.ofNullable(entityManager.createQuery("SELECT j FROM Job j WHERE j.jobTitle = :jobTitle", Job.class)
+                    .setParameter("jobTitle", jobTitle)
+                    .getSingleResult());
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 }

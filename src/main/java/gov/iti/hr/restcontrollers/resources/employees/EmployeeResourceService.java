@@ -11,7 +11,6 @@ import gov.iti.hr.restcontrollers.resources.jobs.JobResourceService;
 import gov.iti.hr.restcontrollers.utils.LinksUtil;
 import gov.iti.hr.services.EmployeeService;
 import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.HttpMethod;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
@@ -64,13 +63,10 @@ public class EmployeeResourceService implements EmployeeResource {
     @Override
     public Response addEmployee(EmployeeDTO employeeDTO) {
         BeanValidator.validateBean(employeeDTO);
-        BeanValidator.validateID(employeeDTO, HttpMethod.POST);
+        BeanValidator.validateID(employeeDTO);
         AbstractMap.SimpleEntry<Integer, EmployeeDTO> employee = employeeService.saveEmployee(employeeDTO);
         EmployeeResponse employeeResponse = new EmployeeResponse(employee.getValue());
         employeeResponse.setLink(LinksUtil.createSelfLink(uriInfo, EmployeeResourceService.class, employee.getKey().toString()));
-        employeeResponse.getDepartmentResponse().setLink(LinksUtil.createSelfLink(uriInfo, DepartmentResourceService.class, employee.getValue().department().departmentId().toString()));
-        employeeResponse.getJobResponse().setLink(LinksUtil.createSelfLink(uriInfo, JobResourceService.class, employee.getValue().job().jobId().toString()));
-        employeeResponse.getManagerResponse().setLink(LinksUtil.createSelfLink(uriInfo, EmployeeResourceService.class, employee.getValue().manager().employeeId().toString()));
         URI uri = LinksUtil.createUriAfterPostRequest(uriInfo, EmployeeResourceService.class, employee.getKey().toString());
         return Response.created(uri).entity(employeeResponse).build();
     }
@@ -78,12 +74,10 @@ public class EmployeeResourceService implements EmployeeResource {
     @Override
     public Response addManager(ManagerDTO managerDTO) {
         BeanValidator.validateBean(managerDTO);
-        BeanValidator.validateID(managerDTO, HttpMethod.POST);
+        BeanValidator.validateID(managerDTO);
         AbstractMap.SimpleEntry<Integer, ManagerDTO> manager = employeeService.saveManager(managerDTO);
         ManagerResponse managerResponse = new ManagerResponse(manager.getValue());
         managerResponse.setLink(LinksUtil.createSelfLink(uriInfo, EmployeeResourceService.class, manager.getKey().toString()));
-        managerResponse.getDepartmentResponse().setLink(LinksUtil.createSelfLink(uriInfo, DepartmentResourceService.class, manager.getValue().department().departmentId().toString()));
-        managerResponse.getJobResponse().setLink(LinksUtil.createSelfLink(uriInfo, JobResourceService.class, manager.getValue().job().jobId().toString()));
         URI uri = LinksUtil.createUriAfterPostRequest(uriInfo, EmployeeResourceService.class, manager.getKey().toString());
         return Response.created(uri).entity(managerResponse).build();
     }
@@ -106,7 +100,7 @@ public class EmployeeResourceService implements EmployeeResource {
     @Override
     public Response addVacation(Integer id, EmployeeVacationDTO employeeVacationDTO) {
         BeanValidator.validateBean(employeeVacationDTO);
-        BeanValidator.validateID(employeeVacationDTO, HttpMethod.POST);
+        BeanValidator.validateID(employeeVacationDTO);
         employeeService.addVacation(id, employeeVacationDTO);
         return Response.ok("Vacation is Accepted").build();
     }

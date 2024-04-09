@@ -14,8 +14,12 @@ public class DepartmentRepositoryImpl extends GenericRepositoryImpl<Department, 
 
     @Override
     public Optional<Department> findByName(String departmentName, EntityManager entityManager) {
-        return Optional.ofNullable(entityManager.createQuery("SELECT d FROM Department d WHERE d.departmentName = :departmentName", Department.class)
-                .setParameter("departmentName", departmentName)
-                .getSingleResult());
+        try {
+            return Optional.ofNullable(entityManager.createQuery("SELECT d FROM Department d WHERE d.departmentName = :departmentName", Department.class)
+                    .setParameter("departmentName", departmentName)
+                    .getSingleResult());
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 }

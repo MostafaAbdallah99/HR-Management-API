@@ -1,5 +1,6 @@
 package gov.iti.hr.services;
 
+import gov.iti.hr.exceptions.BadRequestException;
 import gov.iti.hr.exceptions.ResourceNotFoundException;
 import gov.iti.hr.filters.DepartmentFilter;
 import gov.iti.hr.mappers.DepartmentMapper;
@@ -27,33 +28,46 @@ public class DepartmentService {
     public void deleteDepartment(Integer departmentId) {
         TransactionManager.doInTransactionWithoutResult(entityManager -> {
             Optional<Department> department = departmentRepository.findById(departmentId, entityManager);
-            department.ifPresent(d -> {
-                if(d.getManager() != null) {
-                    entityManager.createQuery("UPDATE Employee e SET e.department = null WHERE e.department.departmentId = :departmentId")
-                            .setParameter("departmentId", departmentId)
-                            .executeUpdate();
-                }
-                if(!departmentRepository.delete(d, entityManager)) {
-                    throw new ResourceNotFoundException(DEPARTMENT_NOT_FOUND_MSG + departmentId);
-                }
+            department.ifPresentOrElse(d -> {
+                employeeRepository.removeEmployeeFromDepartment(departmentId, entityManager);
+                departmentRepository.delete(d, entityManager);
+            }, () -> {
+                throw new ResourceNotFoundException(DEPARTMENT_NOT_FOUND_MSG + departmentId);
             });
         });
     }
 
     public void deleteAll() {
-        TransactionManager.doInTransactionWithoutResult(departmentRepository::deleteAll);
+        TransactionManager.doInTransactionWithoutResult(entityManager -> {
+            employeeRepository.removeEmployeesFromDepartment(entityManager);
+            departmentRepository.deleteAll(entityManager);
+        });
     }
 
     public void updateDepartment(DepartmentDTO departmentDTO) {
         TransactionManager.doInTransactionWithoutResult(entityManager -> {
-            ManagerDTO managerDTO = employeeRepository.findReferenceById(departmentDTO.managerId(), entityManager)
-                    .map(ManagerMapper.INSTANCE::managerToManagerDTO)
-                    .orElseThrow(() -> new ResourceNotFoundException("Manager not found with id: " + departmentDTO.managerId()));
-            DepartmentDTO newDepartmentDTO = new DepartmentDTO(departmentDTO.departmentId(), departmentDTO.departmentName(), departmentDTO.managerId(), managerDTO);
-            Department department = DepartmentMapper.INSTANCE.departmentDTOToDepartment(newDepartmentDTO);
-            if(!departmentRepository.update(department, entityManager)) {
+            Optional<Department> department = departmentRepository.findById(departmentDTO.departmentId(), entityManager);
+            department.ifPresentOrElse(d -> {
+                if(departmentDTO.managerId() != null) {
+                    Department managerDepartment = employeeRepository.hasDepartment(departmentDTO.managerId(), entityManager)
+                            .orElseThrow(() -> new BadRequestException("Manager with id: " + departmentDTO.managerId() + " does not exist"));
+                    if(managerDepartment.getDepartmentId() != null && !managerDepartment.getDepartmentId().equals(departmentDTO.departmentId())) {
+                        throw new BadRequestException("Manager with id: " + departmentDTO.managerId() + " is already a manager of another department");
+                    }
+                    ManagerDTO managerDTO = employeeRepository.findReferenceById(departmentDTO.managerId(), entityManager)
+                            .map(ManagerMapper.INSTANCE::managerToManagerDTO)
+                            .orElseThrow(() -> new ResourceNotFoundException("Manager not found with id: " + departmentDTO.managerId()));
+                    DepartmentDTO newdepartmentDTO = new DepartmentDTO(departmentDTO.departmentId(), departmentDTO.departmentName(), departmentDTO.managerId(), managerDTO);
+                    Department newDepartment = DepartmentMapper.INSTANCE.departmentDTOToDepartment(newdepartmentDTO);
+                    departmentRepository.update(newDepartment, entityManager);
+                    employeeRepository.setEmployeeDepartment(departmentDTO.managerId(), departmentDTO.departmentId(), entityManager);
+                } else {
+                    Department newDepartment = DepartmentMapper.INSTANCE.departmentDTOToDepartment(departmentDTO);
+                    departmentRepository.update(newDepartment, entityManager);
+                }
+            }, () -> {
                 throw new ResourceNotFoundException(DEPARTMENT_NOT_FOUND_MSG + departmentDTO.departmentId());
-            }
+            });
         });
     }
 
@@ -66,15 +80,24 @@ public class DepartmentService {
 
     public Integer saveDepartment(DepartmentDTO departmentDTO) {
         return TransactionManager.doInTransaction(entityManager -> {
-            ManagerDTO managerDTO = employeeRepository.findReferenceById(departmentDTO.managerId(), entityManager)
-                    .map(ManagerMapper.INSTANCE::managerToManagerDTO)
-                    .orElseThrow(() -> new ResourceNotFoundException("Manager not found with id: " + departmentDTO.managerId()));
-            DepartmentDTO newDepartmentDTO = new DepartmentDTO(null, departmentDTO.departmentName(), departmentDTO.managerId(), managerDTO);
-            Department department = DepartmentMapper.INSTANCE.departmentDTOToDepartment(newDepartmentDTO);
-            if(departmentRepository.save(department, entityManager)) {
+            if(departmentDTO.managerId() != null) {
+                Department managerDepartment = employeeRepository.hasDepartment(departmentDTO.managerId(), entityManager)
+                        .orElseThrow(() -> new BadRequestException("Manager with id: " + departmentDTO.managerId() + " does not exist"));
+                if(managerDepartment.getDepartmentId() != null) {
+                    throw new BadRequestException("Manager with id: " + departmentDTO.managerId() + " is already a manager of another department");
+                }
+                ManagerDTO managerDTO = employeeRepository.findReferenceById(departmentDTO.managerId(), entityManager)
+                        .map(ManagerMapper.INSTANCE::managerToManagerDTO)
+                        .orElseThrow(() -> new ResourceNotFoundException("Manager not found with id: " + departmentDTO.managerId()));
+                DepartmentDTO newdepartmentDTO = new DepartmentDTO(null, departmentDTO.departmentName(), departmentDTO.managerId(), managerDTO);
+                Department department = DepartmentMapper.INSTANCE.departmentDTOToDepartment(newdepartmentDTO);
+                departmentRepository.save(department, entityManager);
+                employeeRepository.setEmployeeDepartment(departmentDTO.managerId(), department.getDepartmentId(), entityManager);
                 return department.getDepartmentId();
             } else {
-                throw new ResourceNotFoundException("Department creation failed");
+                Department department = DepartmentMapper.INSTANCE.departmentDTOToDepartment(departmentDTO);
+                departmentRepository.save(department, entityManager);
+                return department.getDepartmentId();
             }
         });
     }

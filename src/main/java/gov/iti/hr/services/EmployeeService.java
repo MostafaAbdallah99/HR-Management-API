@@ -6,6 +6,7 @@ import gov.iti.hr.filters.EmployeeFilter;
 import gov.iti.hr.mappers.*;
 import gov.iti.hr.models.*;
 import gov.iti.hr.models.validation.BeanValidator;
+import gov.iti.hr.persistence.entities.Department;
 import gov.iti.hr.persistence.entities.Employee;
 import gov.iti.hr.persistence.entities.EmployeeVacation;
 import gov.iti.hr.persistence.repository.TransactionManager;
@@ -65,15 +66,24 @@ public class EmployeeService {
 
     public AbstractMap.SimpleEntry<Integer, EmployeeDTO> saveEmployee(EmployeeDTO employeeDTO) {
         return TransactionManager.doInTransaction(entityManager -> {
-            DepartmentDTO departmentDTO = departmentRepository.findByName(employeeDTO.departmentName(), entityManager)
-                    .map(DepartmentMapper.INSTANCE::departmentToDepartmentDTO)
-                    .orElseThrow(() -> new ResourceNotFoundException("Department not found"));
+            Employee manager = employeeRepository.findByEmail(employeeDTO.managerEmail(), entityManager)
+                    .orElseThrow(() -> new ResourceNotFoundException("Manager not found not found"));
             JobDTO jobDTO = jobRepository.findJobByName(employeeDTO.jobName(), entityManager)
                     .map(JobMapper.INSTANCE::jobToJobDTO)
                     .orElseThrow(() -> new ResourceNotFoundException("Job not found"));
-            ManagerDTO managerDTO = employeeRepository.findByEmail(employeeDTO.managerEmail(), entityManager)
-                    .map(ManagerMapper.INSTANCE::managerToManagerDTO)
-                    .orElseThrow(() -> new ResourceNotFoundException("Manager not found"));
+
+
+
+            ManagerDTO managerDTO = ManagerMapper.INSTANCE.managerToManagerDTO(manager);
+
+            Department department = departmentRepository.findByName(employeeDTO.departmentName(), entityManager)
+                    .orElseThrow(() -> new ResourceNotFoundException("Department not found"));
+            DepartmentDTO departmentDTO = new DepartmentDTO(
+                    department.getDepartmentId(),
+                    department.getDepartmentName(),
+                    manager.getEmployeeId(),
+                    department.getManager() == null ? null : ManagerMapper.INSTANCE.managerToManagerDTO(department.getManager()));
+
 
             EmployeeDTO newEmployeeDTO = new EmployeeDTO(
                     employeeDTO.employeeId(),
@@ -103,9 +113,7 @@ public class EmployeeService {
 
     public AbstractMap.SimpleEntry<Integer, ManagerDTO> saveManager(ManagerDTO managerDTO) {
         return TransactionManager.doInTransaction(entityManager -> {
-            DepartmentDTO departmentDTO = departmentRepository.findByName(managerDTO.departmentName(), entityManager)
-                    .map(DepartmentMapper.INSTANCE::departmentToDepartmentDTO)
-                    .orElseThrow(() -> new ResourceNotFoundException("Department not found"));
+
             JobDTO jobDTO = jobRepository.findJobByName(managerDTO.jobName(), entityManager)
                     .map(JobMapper.INSTANCE::jobToJobDTO)
                     .orElseThrow(() -> new ResourceNotFoundException("Job not found"));
@@ -120,7 +128,7 @@ public class EmployeeService {
                     managerDTO.vacationBalance(),
                     managerDTO.gender(),
                     managerDTO.jobName(),
-                    managerDTO.departmentName(), departmentDTO, jobDTO);
+                    managerDTO.departmentName(), null, jobDTO);
             Employee employee = ManagerMapper.INSTANCE.managerDTOToManager(newManagerDTO);
             if (employeeRepository.save(employee, entityManager)) {
                 return new AbstractMap.SimpleEntry<>(employee.getEmployeeId(), newManagerDTO);

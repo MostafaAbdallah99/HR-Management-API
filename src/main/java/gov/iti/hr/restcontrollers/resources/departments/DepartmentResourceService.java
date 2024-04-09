@@ -9,7 +9,6 @@ import gov.iti.hr.restcontrollers.resources.interfaces.DepartmentResource;
 import gov.iti.hr.restcontrollers.utils.LinksUtil;
 import gov.iti.hr.services.DepartmentService;
 import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.HttpMethod;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
@@ -57,11 +56,11 @@ public class DepartmentResourceService implements DepartmentResource {
     @Override
     public Response addDepartment(DepartmentDTO departmentDTO) {
         BeanValidator.validateBean(departmentDTO);
-        BeanValidator.validateID(departmentDTO, HttpMethod.POST);
+        BeanValidator.validateID(departmentDTO);
         Integer departmentId = departmentService.saveDepartment(departmentDTO);
         DepartmentResponse departmentResponse = new DepartmentResponse(departmentDTO);
         departmentResponse.setLink(LinksUtil.createSelfLink(uriInfo, DepartmentResourceService.class, departmentId.toString()));
-        departmentResponse.getManager().setLink(LinksUtil.createSelfLink(uriInfo, EmployeeResourceService.class, departmentDTO.managerId().toString()));
+        departmentResponse.getManager().setLink(LinksUtil.createSelfLink(uriInfo, EmployeeResourceService.class, departmentDTO.managerId() == null ? "" : departmentDTO.managerId().toString()));
         URI uri = LinksUtil.createUriAfterPostRequest(uriInfo, DepartmentResourceService.class, departmentId.toString());
         return Response.created(uri).entity(departmentResponse).build();
     }
@@ -81,7 +80,6 @@ public class DepartmentResourceService implements DepartmentResource {
     @Override
     public Response updateDepartment(Integer id, DepartmentDTO departmentDTO) {
         BeanValidator.validateBean(departmentDTO);
-        BeanValidator.validateID(departmentDTO, HttpMethod.PUT);
         DepartmentDTO updatedDepartmentDTO = new DepartmentDTO(id, departmentDTO.departmentName(), departmentDTO.managerId(), departmentDTO.managerDTO());
         departmentService.updateDepartment(updatedDepartmentDTO);
         DepartmentResponse departmentResponse = new DepartmentResponse(updatedDepartmentDTO);

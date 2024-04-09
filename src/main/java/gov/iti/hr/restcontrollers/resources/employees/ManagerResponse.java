@@ -66,7 +66,6 @@ public class ManagerResponse implements Serializable {
         this.salary = managerDTO.salary();
         this.vacationBalance = managerDTO.vacationBalance();
         this.jobResponse = new JobResponse(managerDTO.job());
-        this.departmentResponse = new DepartmentResponse(managerDTO.department());
         this.link = null;
     }
 
