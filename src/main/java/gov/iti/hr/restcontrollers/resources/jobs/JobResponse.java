@@ -1,8 +1,8 @@
 package gov.iti.hr.restcontrollers.resources.jobs;
 
 import gov.iti.hr.models.JobDTO;
-import gov.iti.hr.restcontrollers.adapter.JaxbLinkAdapter;
-import gov.iti.hr.restcontrollers.adapter.JsonbSingleLinkAdapter;
+import gov.iti.hr.adapter.JaxbLinkAdapter;
+import gov.iti.hr.adapter.JsonbSingleLinkAdapter;
 import jakarta.json.bind.annotation.JsonbPropertyOrder;
 import jakarta.json.bind.annotation.JsonbTypeAdapter;
 import jakarta.ws.rs.core.Link;
@@ -35,10 +35,10 @@ public class JobResponse implements Serializable {
     private Link link;
 
     public JobResponse(JobDTO jobDTO) {
-        this.jobId = jobDTO.jobId();
-        this.jobTitle = jobDTO.jobTitle();
-        this.minSalary = jobDTO.minSalary();
-        this.maxSalary = jobDTO.maxSalary();
+        this.jobId = jobDTO.getJobId();
+        this.jobTitle = jobDTO.getJobTitle();
+        this.minSalary = jobDTO.getMinSalary();
+        this.maxSalary = jobDTO.getMaxSalary();
         this.link = null;
     }
 

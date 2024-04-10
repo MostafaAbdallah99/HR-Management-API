@@ -77,6 +77,7 @@ public class JobService {
     }
 
     public List<JobDTO> getAllJobs(JobFilter jobFilter) {
+
         BeanValidator.validatePaginationParameters(jobFilter.getPaginationBean());
         return TransactionManager.doInTransaction(entityManager -> jobRepository.findAll(entityManager, jobFilter, Job.class)
                 .stream()
@@ -89,7 +90,7 @@ public class JobService {
     }
 
     private void validateJobCreation(JobDTO jobDTO) {
-        if(jobDTO.maxSalary() < jobDTO.minSalary()) {
+        if(jobDTO.getMaxSalary() < jobDTO.getMinSalary()) {
             throw new BadRequestException("Max salary cannot be less than min salary");
         }
     }

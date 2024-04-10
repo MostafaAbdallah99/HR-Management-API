@@ -52,7 +52,7 @@ public class JobResourceService implements JobResource {
         BeanValidator.validateBean(jobDTO);
         BeanValidator.validateID(jobDTO);
         Integer jobId = jobService.saveJob(jobDTO);
-        JobDTO newJobDTO = new JobDTO(jobId, jobDTO.jobTitle(), jobDTO.minSalary(), jobDTO.maxSalary());
+        JobDTO newJobDTO = new JobDTO(jobId, jobDTO.getJobTitle(), jobDTO.getMinSalary(), jobDTO.getMaxSalary());
         JobResponse jobResponse = new JobResponse(newJobDTO);
         jobResponse.setLink(LinksUtil.createSelfLink(uriInfo, JobResourceService.class, jobId.toString()));
         URI uri = LinksUtil.createUriAfterPostRequest(uriInfo, JobResourceService.class, jobId.toString());
@@ -74,7 +74,7 @@ public class JobResourceService implements JobResource {
     @Override
     public Response updateJob(Integer id, JobDTO jobDTO) {
         BeanValidator.validateBean(jobDTO);
-        JobDTO updatedJobDTO = new JobDTO(id, jobDTO.jobTitle(), jobDTO.minSalary(), jobDTO.maxSalary());
+        JobDTO updatedJobDTO = new JobDTO(id, jobDTO.getJobTitle(), jobDTO.getMinSalary(), jobDTO.getMaxSalary());
         jobService.updateJob(id, updatedJobDTO);
         JobResponse jobResponse = new JobResponse(updatedJobDTO);
         jobResponse.setLink(LinksUtil.createSelfLink(uriInfo, JobResourceService.class, id.toString()));

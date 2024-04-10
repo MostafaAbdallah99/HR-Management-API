@@ -25,6 +25,6 @@
     </head>
     <body>
         <a class="link-label" href="rest">Go to REST endpoint</a>
-        <a class="link-label" href="soap">Go to SOAP endpoint</a>
+        <a class="link-label" href="soap/jobs">Go to SOAP endpoint</a>
     </body>
 </html>

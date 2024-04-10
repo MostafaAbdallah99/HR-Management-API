@@ -1,7 +1,7 @@
 package gov.iti.hr.restcontrollers.resources.employees;
 
-import gov.iti.hr.restcontrollers.adapter.JaxbLinkAdapter;
-import gov.iti.hr.restcontrollers.adapter.JsonbLinksAdapter;
+import gov.iti.hr.adapter.JaxbLinkAdapter;
+import gov.iti.hr.adapter.JsonbLinksAdapter;
 import jakarta.json.bind.annotation.JsonbPropertyOrder;
 import jakarta.json.bind.annotation.JsonbTypeAdapter;
 import jakarta.ws.rs.core.Link;

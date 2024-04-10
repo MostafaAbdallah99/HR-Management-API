@@ -18,7 +18,6 @@ import gov.iti.hr.persistence.repository.repositories.JobRepositoryImpl;
 import java.time.temporal.ChronoUnit;
 import java.util.AbstractMap;
 import java.util.List;
-import java.util.Optional;
 
 public class EmployeeService {
     private final EmployeeRepositoryImpl employeeRepository;
@@ -32,21 +31,6 @@ public class EmployeeService {
         jobRepository = new JobRepositoryImpl();
         departmentRepository = new DepartmentRepositoryImpl();
         employeeVacationRepository = new EmployeeVacationRepositoryImpl();
-    }
-
-    public void deleteEmployee(Integer employeeId) {
-        TransactionManager.doInTransactionWithoutResult(entityManager -> {
-            Optional<Employee> employee = employeeRepository.findById(employeeId, entityManager);
-            employee.ifPresent(e -> {
-                if(!employeeRepository.delete(e, entityManager)) {
-                    throw new ResourceNotFoundException(EMPLOYEE_NOT_FOUND_MSG + employeeId);
-                }
-            });
-        });
-    }
-
-    public void deleteAll() {
-        TransactionManager.doInTransactionWithoutResult(employeeRepository::deleteAll);
     }
 
     public void updateEmployee(EmployeeDTO employeeDTO) {
@@ -66,9 +50,9 @@ public class EmployeeService {
 
     public AbstractMap.SimpleEntry<Integer, EmployeeDTO> saveEmployee(EmployeeDTO employeeDTO) {
         return TransactionManager.doInTransaction(entityManager -> {
-            Employee manager = employeeRepository.findByEmail(employeeDTO.managerEmail(), entityManager)
+            Employee manager = employeeRepository.findByEmail(employeeDTO.getManagerEmail(), entityManager)
                     .orElseThrow(() -> new ResourceNotFoundException("Manager not found not found"));
-            JobDTO jobDTO = jobRepository.findJobByName(employeeDTO.jobName(), entityManager)
+            JobDTO jobDTO = jobRepository.findJobByName(employeeDTO.getJobName(), entityManager)
                     .map(JobMapper.INSTANCE::jobToJobDTO)
                     .orElseThrow(() -> new ResourceNotFoundException("Job not found"));
 
@@ -76,7 +60,7 @@ public class EmployeeService {
 
             ManagerDTO managerDTO = ManagerMapper.INSTANCE.managerToManagerDTO(manager);
 
-            Department department = departmentRepository.findByName(employeeDTO.departmentName(), entityManager)
+            Department department = departmentRepository.findByName(employeeDTO.getDepartmentName(), entityManager)
                     .orElseThrow(() -> new ResourceNotFoundException("Department not found"));
             DepartmentDTO departmentDTO = new DepartmentDTO(
                     department.getDepartmentId(),
@@ -86,18 +70,18 @@ public class EmployeeService {
 
 
             EmployeeDTO newEmployeeDTO = new EmployeeDTO(
-                    employeeDTO.employeeId(),
-                    employeeDTO.firstName(),
-                    employeeDTO.lastName(),
-                    employeeDTO.email(),
-                    employeeDTO.phoneNumber(),
-                    employeeDTO.hireDate(),
-                    employeeDTO.salary(),
-                    employeeDTO.vacationBalance(),
-                    employeeDTO.gender(),
-                    employeeDTO.managerEmail(),
-                    employeeDTO.jobName(),
-                    employeeDTO.departmentName(),
+                    employeeDTO.getEmployeeId(),
+                    employeeDTO.getFirstName(),
+                    employeeDTO.getLastName(),
+                    employeeDTO.getEmail(),
+                    employeeDTO.getPhoneNumber(),
+                    employeeDTO.getHireDate(),
+                    employeeDTO.getSalary(),
+                    employeeDTO.getVacationBalance(),
+                    employeeDTO.getGender(),
+                    employeeDTO.getManagerEmail(),
+                    employeeDTO.getJobName(),
+                    employeeDTO.getDepartmentName(),
                     managerDTO,
                     jobDTO,
                     departmentDTO
@@ -114,20 +98,20 @@ public class EmployeeService {
     public AbstractMap.SimpleEntry<Integer, ManagerDTO> saveManager(ManagerDTO managerDTO) {
         return TransactionManager.doInTransaction(entityManager -> {
 
-            JobDTO jobDTO = jobRepository.findJobByName(managerDTO.jobName(), entityManager)
+            JobDTO jobDTO = jobRepository.findJobByName(managerDTO.getJobName(), entityManager)
                     .map(JobMapper.INSTANCE::jobToJobDTO)
                     .orElseThrow(() -> new ResourceNotFoundException("Job not found"));
             ManagerDTO newManagerDTO = new ManagerDTO(
-                    managerDTO.employeeId(),
-                    managerDTO.firstName(),
-                    managerDTO.lastName(),
-                    managerDTO.email(),
-                    managerDTO.phoneNumber(),
-                    managerDTO.hireDate(),
-                    managerDTO.salary(),
-                    managerDTO.vacationBalance(),
-                    managerDTO.gender(),
-                    managerDTO.jobName(),
+                    managerDTO.getEmployeeId(),
+                    managerDTO.getFirstName(),
+                    managerDTO.getLastName(),
+                    managerDTO.getEmail(),
+                    managerDTO.getPhoneNumber(),
+                    managerDTO.getHireDate(),
+                    managerDTO.getSalary(),
+                    managerDTO.getVacationBalance(),
+                    managerDTO.getGender(),
+                    managerDTO.getJobName(),
                     null, jobDTO);
             Employee employee = ManagerMapper.INSTANCE.managerDTOToManager(newManagerDTO);
             if (employeeRepository.save(employee, entityManager)) {
@@ -154,7 +138,7 @@ public class EmployeeService {
         TransactionManager.doInTransactionWithoutResult(entityManager -> {
             Employee employee = employeeRepository.findById(employeeId, entityManager)
                     .orElseThrow(() -> new ResourceNotFoundException(EMPLOYEE_NOT_FOUND_MSG + employeeId));
-            Long vacationDays = ChronoUnit.DAYS.between(employeeVacationDTO.vacationStartDate(), employeeVacationDTO.vacationEndDate());
+            Long vacationDays = ChronoUnit.DAYS.between(employeeVacationDTO.getVacationStartDate(), employeeVacationDTO.getVacationEndDate());
             if(employee.getVacationBalance() < vacationDays) {
                 throw new BadRequestException("Vacation balance is not enough");
             } else {
@@ -162,9 +146,9 @@ public class EmployeeService {
                 employeeRepository.update(employee, entityManager);
                 EmployeeDTO employeeDTO = EmployeeMapper.INSTANCE.employeeToEmployeeDTO(employee);
                 EmployeeVacationDTO newEmployeeVacationDTO = new EmployeeVacationDTO(
-                        employeeVacationDTO.vacationId(),
-                        employeeVacationDTO.vacationStartDate(),
-                        employeeVacationDTO.vacationEndDate(),
+                        employeeVacationDTO.getVacationId(),
+                        employeeVacationDTO.getVacationStartDate(),
+                        employeeVacationDTO.getVacationEndDate(),
                         employeeDTO
                 );
                 EmployeeVacation employeeVacation = EmployeeVacationMapper.INSTANCE.employeeVacationDTOToEmployeeVacation(newEmployeeVacationDTO);

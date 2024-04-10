@@ -2,8 +2,8 @@ package gov.iti.hr.restcontrollers.resources.employees;
 
 
 import gov.iti.hr.models.ManagerDTO;
-import gov.iti.hr.restcontrollers.adapter.JaxbLinkAdapter;
-import gov.iti.hr.restcontrollers.adapter.JsonbSingleLinkAdapter;
+import gov.iti.hr.adapter.JaxbLinkAdapter;
+import gov.iti.hr.adapter.JsonbSingleLinkAdapter;
 import gov.iti.hr.restcontrollers.resources.departments.DepartmentResponse;
 import gov.iti.hr.restcontrollers.resources.jobs.JobResponse;
 import jakarta.json.bind.annotation.JsonbPropertyOrder;
@@ -57,15 +57,15 @@ public class ManagerResponse implements Serializable {
         if (managerDTO == null) {
             return;
         }
-        this.employeeId = managerDTO.employeeId();
-        this.firstName = managerDTO.firstName();
-        this.lastName = managerDTO.lastName();
-        this.email = managerDTO.email();
-        this.phoneNumber = managerDTO.phoneNumber();
-        this.hireDate = managerDTO.hireDate();
-        this.salary = managerDTO.salary();
-        this.vacationBalance = managerDTO.vacationBalance();
-        this.jobResponse = new JobResponse(managerDTO.job());
+        this.employeeId = managerDTO.getEmployeeId();
+        this.firstName = managerDTO.getFirstName();
+        this.lastName = managerDTO.getLastName();
+        this.email = managerDTO.getEmail();
+        this.phoneNumber = managerDTO.getPhoneNumber();
+        this.hireDate = managerDTO.getHireDate();
+        this.salary = managerDTO.getSalary();
+        this.vacationBalance = managerDTO.getVacationBalance();
+        this.jobResponse = new JobResponse(managerDTO.getJob());
         this.link = null;
     }
 

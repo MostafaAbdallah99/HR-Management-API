@@ -1,8 +1,8 @@
 package gov.iti.hr.restcontrollers.resources.departments;
 
 import gov.iti.hr.models.DepartmentDTO;
-import gov.iti.hr.restcontrollers.adapter.JaxbLinkAdapter;
-import gov.iti.hr.restcontrollers.adapter.JsonbSingleLinkAdapter;
+import gov.iti.hr.adapter.JaxbLinkAdapter;
+import gov.iti.hr.adapter.JsonbSingleLinkAdapter;
 import gov.iti.hr.restcontrollers.resources.employees.ManagerResponse;
 import jakarta.json.bind.annotation.JsonbPropertyOrder;
 import jakarta.json.bind.annotation.JsonbTypeAdapter;
@@ -35,9 +35,9 @@ public class DepartmentResponse {
     private Link link;
 
     public DepartmentResponse(DepartmentDTO departmentDTO) {
-        this.departmentId = departmentDTO.departmentId();
-        this.departmentName = departmentDTO.departmentName();
-        this.managerId = departmentDTO.managerId();
+        this.departmentId = departmentDTO.getDepartmentId();
+        this.departmentName = departmentDTO.getDepartmentName();
+        this.managerId = departmentDTO.getManagerId();
         this.link = null;
     }
 

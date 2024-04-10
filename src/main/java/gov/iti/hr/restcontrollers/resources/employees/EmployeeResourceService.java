@@ -5,9 +5,7 @@ import gov.iti.hr.models.EmployeeDTO;
 import gov.iti.hr.models.EmployeeVacationDTO;
 import gov.iti.hr.models.ManagerDTO;
 import gov.iti.hr.models.validation.BeanValidator;
-import gov.iti.hr.restcontrollers.resources.departments.DepartmentResourceService;
 import gov.iti.hr.restcontrollers.resources.interfaces.EmployeeResource;
-import gov.iti.hr.restcontrollers.resources.jobs.JobResourceService;
 import gov.iti.hr.restcontrollers.utils.LinksUtil;
 import gov.iti.hr.services.EmployeeService;
 import jakarta.ws.rs.Consumes;
@@ -93,20 +91,20 @@ public class EmployeeResourceService implements EmployeeResource {
 
         EmployeeDTO updatedEmployeeDTO = new EmployeeDTO(
                 id,
-                employeeDTO.firstName(),
-                employeeDTO.lastName(),
-                employeeDTO.email(),
-                employeeDTO.phoneNumber(),
-                employeeDTO.hireDate(),
-                employeeDTO.salary(),
-                employeeDTO.vacationBalance(),
-                employeeDTO.gender(),
-                employeeDTO.managerEmail(),
-                employeeDTO.jobName(),
-                employeeDTO.departmentName(),
-                employeeDTO.manager(),
-                employeeDTO.job(),
-                employeeDTO.department()
+                employeeDTO.getFirstName(),
+                employeeDTO.getLastName(),
+                employeeDTO.getEmail(),
+                employeeDTO.getPhoneNumber(),
+                employeeDTO.getHireDate(),
+                employeeDTO.getSalary(),
+                employeeDTO.getVacationBalance(),
+                employeeDTO.getGender(),
+                employeeDTO.getManagerEmail(),
+                employeeDTO.getJobName(),
+                employeeDTO.getDepartmentName(),
+                employeeDTO.getManager(),
+                employeeDTO.getJob(),
+                employeeDTO.getDepartment()
                 );
         employeeService.updateEmployee(updatedEmployeeDTO);
         EmployeeResponse employeeResponse = new EmployeeResponse(updatedEmployeeDTO);

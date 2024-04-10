@@ -13,16 +13,12 @@
             <param-name>jersey.config.server.provider.packages</param-name>
             <param-value>gov.iti.hr.restcontrollers.resources;gov.iti.hr.exceptions;</param-value>
         </init-param>
-        <load-on-startup>1</load-on-startup>
+        <load-on-startup>2</load-on-startup>
     </servlet>
     <servlet-mapping>
         <servlet-name>Jersey Web Application</servlet-name>
         <url-pattern>/rest/*</url-pattern>
     </servlet-mapping>
-
-    <listener>
-        <listener-class>com.sun.xml.ws.transport.http.servlet.WSServletContextListener</listener-class>
-    </listener>
 
     <servlet>
         <servlet-name>JAXWSServlet</servlet-name>
@@ -34,4 +30,10 @@
         <servlet-name>JAXWSServlet</servlet-name>
         <url-pattern>/soap/*</url-pattern>
     </servlet-mapping>
+
+
+    <listener>
+        <listener-class>com.sun.xml.ws.transport.http.servlet.WSServletContextListener</listener-class>
+    </listener>
+
 </web-app>

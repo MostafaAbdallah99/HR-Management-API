@@ -1,8 +1,8 @@
 package gov.iti.hr.restcontrollers.resources.employees;
 
 import gov.iti.hr.models.EmployeeDTO;
-import gov.iti.hr.restcontrollers.adapter.JaxbLinkAdapter;
-import gov.iti.hr.restcontrollers.adapter.JsonbSingleLinkAdapter;
+import gov.iti.hr.adapter.JaxbLinkAdapter;
+import gov.iti.hr.adapter.JsonbSingleLinkAdapter;
 import gov.iti.hr.restcontrollers.resources.departments.DepartmentResponse;
 import gov.iti.hr.restcontrollers.resources.jobs.JobResponse;
 import jakarta.json.bind.annotation.JsonbPropertyOrder;
@@ -60,17 +60,17 @@ public class EmployeeResponse implements Serializable {
     private Link link;
 
     public EmployeeResponse(EmployeeDTO employeeDTO) {
-        this.employeeId = employeeDTO.employeeId();
-        this.firstName = employeeDTO.firstName();
-        this.lastName = employeeDTO.lastName();
-        this.email = employeeDTO.email();
-        this.phoneNumber = employeeDTO.phoneNumber();
-        this.hireDate = employeeDTO.hireDate();
-        this.jobTitle = employeeDTO.jobName();
-        this.departmentName = employeeDTO.departmentName();
-        this.managerName = employeeDTO.managerEmail();
-        this.salary = employeeDTO.salary();
-        this.vacationBalance = employeeDTO.vacationBalance();
+        this.employeeId = employeeDTO.getEmployeeId();
+        this.firstName = employeeDTO.getFirstName();
+        this.lastName = employeeDTO.getLastName();
+        this.email = employeeDTO.getEmail();
+        this.phoneNumber = employeeDTO.getPhoneNumber();
+        this.hireDate = employeeDTO.getHireDate();
+        this.jobTitle = employeeDTO.getJobName();
+        this.departmentName = employeeDTO.getDepartmentName();
+        this.managerName = employeeDTO.getManagerEmail();
+        this.salary = employeeDTO.getSalary();
+        this.vacationBalance = employeeDTO.getVacationBalance();
         this.link = null;
     }
 

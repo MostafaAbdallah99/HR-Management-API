@@ -76,7 +76,7 @@ public class DepartmentResourceService implements DepartmentResource {
     @Override
     public Response updateDepartment(Integer id, DepartmentDTO departmentDTO) {
         BeanValidator.validateBean(departmentDTO);
-        DepartmentDTO updatedDepartmentDTO = new DepartmentDTO(id, departmentDTO.departmentName(), departmentDTO.managerId(), departmentDTO.managerDTO());
+        DepartmentDTO updatedDepartmentDTO = new DepartmentDTO(id, departmentDTO.getDepartmentName(), departmentDTO.getManagerId(), departmentDTO.getManagerDTO());
         departmentService.updateDepartment(updatedDepartmentDTO);
         DepartmentResponse departmentResponse = new DepartmentResponse(updatedDepartmentDTO);
         departmentResponse.setLink(LinksUtil.createSelfLink(uriInfo, DepartmentResourceService.class, id.toString()));

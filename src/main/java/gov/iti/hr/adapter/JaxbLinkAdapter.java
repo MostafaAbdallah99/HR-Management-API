@@ -1,4 +1,4 @@
-package gov.iti.hr.restcontrollers.adapter;
+package gov.iti.hr.adapter;
 
 import gov.iti.hr.restcontrollers.beans.AdaptedLink;
 import jakarta.ws.rs.core.Link;
