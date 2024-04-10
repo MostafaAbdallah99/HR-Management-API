@@ -35,7 +35,43 @@ public class EmployeeService {
 
     public void updateEmployee(EmployeeDTO employeeDTO) {
         TransactionManager.doInTransactionWithoutResult(entityManager -> {
-            Employee employee = EmployeeMapper.INSTANCE.employeeDTOToEmployee(employeeDTO);
+            Employee manager = employeeRepository.findByEmail(employeeDTO.getManagerEmail(), entityManager)
+                    .orElseThrow(() -> new ResourceNotFoundException("Manager not found not found"));
+            JobDTO jobDTO = jobRepository.findJobByName(employeeDTO.getJobName(), entityManager)
+                    .map(JobMapper.INSTANCE::jobToJobDTO)
+                    .orElseThrow(() -> new ResourceNotFoundException("Job not found"));
+
+
+
+            ManagerDTO managerDTO = ManagerMapper.INSTANCE.managerToManagerDTO(manager);
+
+            Department department = departmentRepository.findByName(employeeDTO.getDepartmentName(), entityManager)
+                    .orElseThrow(() -> new ResourceNotFoundException("Department not found"));
+            DepartmentDTO departmentDTO = new DepartmentDTO(
+                    department.getDepartmentId(),
+                    department.getDepartmentName(),
+                    manager.getEmployeeId(),
+                    department.getManager() == null ? null : ManagerMapper.INSTANCE.managerToManagerDTO(department.getManager()));
+
+
+            EmployeeDTO newEmployeeDTO = new EmployeeDTO(
+                    employeeDTO.getEmployeeId(),
+                    employeeDTO.getFirstName(),
+                    employeeDTO.getLastName(),
+                    employeeDTO.getEmail(),
+                    employeeDTO.getPhoneNumber(),
+                    employeeDTO.getHireDate(),
+                    employeeDTO.getSalary(),
+                    employeeDTO.getVacationBalance(),
+                    employeeDTO.getGender(),
+                    employeeDTO.getManagerEmail(),
+                    employeeDTO.getJobName(),
+                    employeeDTO.getDepartmentName(),
+                    managerDTO,
+                    jobDTO,
+                    departmentDTO
+            );
+            Employee employee = EmployeeMapper.INSTANCE.employeeDTOToEmployee(newEmployeeDTO);
             if(!employeeRepository.update(employee, entityManager)) {
                 throw new ResourceNotFoundException(EMPLOYEE_NOT_FOUND_MSG + employee.getEmployeeId());
             }
