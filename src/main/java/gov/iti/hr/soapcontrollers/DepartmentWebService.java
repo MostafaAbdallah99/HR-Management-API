@@ -7,11 +7,13 @@ import gov.iti.hr.services.DepartmentService;
 import jakarta.jws.WebParam;
 import jakarta.jws.WebService;
 import jakarta.jws.soap.SOAPBinding;
+import jakarta.xml.ws.BindingType;
 
 import java.util.List;
 
 @WebService
 @SOAPBinding(style = SOAPBinding.Style.DOCUMENT)
+@BindingType(jakarta.xml.ws.soap.SOAPBinding.SOAP12HTTP_BINDING)
 public class DepartmentWebService {
     private final DepartmentService departmentService;
 
