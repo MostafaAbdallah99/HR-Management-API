@@ -11,8 +11,10 @@ import gov.iti.hr.persistence.repository.TransactionManager;
 import gov.iti.hr.persistence.repository.repositories.EmployeeRepositoryImpl;
 import gov.iti.hr.persistence.repository.repositories.JobRepositoryImpl;
 import gov.iti.hr.filters.JobFilter;
+import jakarta.persistence.EntityManager;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 public class JobService {
@@ -27,12 +29,12 @@ public class JobService {
 
     public Integer saveJob(JobDTO jobDTO) {
         return TransactionManager.doInTransaction(entityManager -> {
-            validateJobCreation(jobDTO);
+            validateJobCreation(0, jobDTO, entityManager);
             Job job = JobMapper.INSTANCE.jobDTOToJob(jobDTO);
             if(jobRepository.save(job, entityManager)) {
                 return job.getJobId();
             } else {
-                throw new EntityCreationException("Duplicate Entry for job title");
+                throw new EntityCreationException("Job creation failed");
             }
         });
     }
@@ -57,9 +59,7 @@ public class JobService {
 
     public void updateJob(Integer jobId, JobDTO jobDTO) {
         TransactionManager.doInTransactionWithoutResult(entityManager -> {
-            validateJobCreation(jobDTO);
-
-
+            validateJobCreation(jobId, jobDTO, entityManager);
             jobRepository.findById(jobId, entityManager).ifPresentOrElse(j -> {
                 Job job = JobMapper.INSTANCE.jobDTOToJob(jobDTO);
                 jobRepository.update(job, entityManager);
@@ -77,7 +77,6 @@ public class JobService {
     }
 
     public List<JobDTO> getAllJobs(JobFilter jobFilter) {
-
         BeanValidator.validatePaginationParameters(jobFilter.getPaginationBean());
         return TransactionManager.doInTransaction(entityManager -> jobRepository.findAll(entityManager, jobFilter, Job.class)
                 .stream()
@@ -89,9 +88,19 @@ public class JobService {
         return TransactionManager.doInTransaction(jobRepository::count);
     }
 
-    private void validateJobCreation(JobDTO jobDTO) {
-        if(jobDTO.getMaxSalary() < jobDTO.getMinSalary()) {
+    private void validateJobCreation(Integer jobId, JobDTO jobDTO, EntityManager entityManager) {
+        if (jobDTO.getMaxSalary() < jobDTO.getMinSalary()) {
             throw new BadRequestException("Max salary cannot be less than min salary");
+        }
+
+        Optional<Job> job = jobRepository.findJobByName(jobDTO.getJobTitle(), entityManager);
+
+        if (job.isPresent()) {
+            if (jobId == 0) {
+                throw new BadRequestException("Job with the same title already exists");
+            } else if (!Objects.equals(jobId, job.get().getJobId())) {
+                throw new BadRequestException("Job with the same title already exists");
+            }
         }
     }
 }

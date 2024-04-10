@@ -16,7 +16,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class JobDTO implements DTO {
+
         private Integer jobId;
+
         @NotEmpty(message = "You must provide Job Title")
         private String jobTitle;
 

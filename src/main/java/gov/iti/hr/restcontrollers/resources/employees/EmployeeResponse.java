@@ -1,8 +1,8 @@
 package gov.iti.hr.restcontrollers.resources.employees;
 
+import gov.iti.hr.adapter.JsonbSingleLinkAdapter;
 import gov.iti.hr.models.EmployeeDTO;
 import gov.iti.hr.adapter.JaxbLinkAdapter;
-import gov.iti.hr.adapter.JsonbSingleLinkAdapter;
 import gov.iti.hr.restcontrollers.resources.departments.DepartmentResponse;
 import gov.iti.hr.restcontrollers.resources.jobs.JobResponse;
 import jakarta.json.bind.annotation.JsonbPropertyOrder;
@@ -22,8 +22,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @XmlRootElement(name = "employee")
-@XmlType(propOrder = {"employeeId", "firstName", "lastName", "email", "phoneNumber", "hireDate", "jobTitle", "salary", "vacationBalance", "managerName", "departmentName", "links"})
-@JsonbPropertyOrder({"employeeId", "firstName", "lastName", "email", "phoneNumber", "hireDate", "jobTitle", "salary", "vacationBalance", "managerName", "departmentName", "links"})
+@XmlType(propOrder = {"employeeId", "firstName", "lastName", "email", "phoneNumber", "hireDate", "jobTitle", "salary", "vacationBalance", "managerName", "departmentName", "link"})
+@JsonbPropertyOrder({"employeeId", "firstName", "lastName", "email", "phoneNumber", "hireDate", "jobTitle", "salary", "vacationBalance", "managerName", "departmentName", "link"})
 @Setter
 @ToString
 @NoArgsConstructor

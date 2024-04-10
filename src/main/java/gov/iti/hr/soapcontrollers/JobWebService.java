@@ -33,12 +33,19 @@ public class JobWebService {
         return jobService.getJobById(jobId);
     }
 
-    public String saveJob(@WebParam(name = "JobDTO") JobDTO jobDTO) {
+    public String saveJob(
+            @WebParam(name = "jobTitle") String jobTitle
+            , @WebParam(name = "minSalary") Integer minSalary
+            , @WebParam(name = "maxSalary") Integer maxSalary) {
+        JobDTO jobDTO = new JobDTO();
+        jobDTO.setJobTitle(jobTitle);
+        jobDTO.setMinSalary(minSalary);
+        jobDTO.setMaxSalary(maxSalary);
         return "Job saved successfully with id: " + jobService.saveJob(jobDTO);
     }
 
-    public String updateJob(@WebParam(name = "JobId") Integer jobId, @WebParam(name = "JobDTO") JobDTO jobDTO) {
-        jobService.updateJob(jobId, jobDTO);
+    public String updateJob(@WebParam(name = "JobDTO") JobDTO jobDTO) {
+        jobService.updateJob(jobDTO.getJobId(), jobDTO);
         return "Job updated successfully";
     }
 

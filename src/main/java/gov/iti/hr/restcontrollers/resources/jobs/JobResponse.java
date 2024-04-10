@@ -1,8 +1,8 @@
 package gov.iti.hr.restcontrollers.resources.jobs;
 
+import gov.iti.hr.adapter.JsonbSingleLinkAdapter;
 import gov.iti.hr.models.JobDTO;
 import gov.iti.hr.adapter.JaxbLinkAdapter;
-import gov.iti.hr.adapter.JsonbSingleLinkAdapter;
 import jakarta.json.bind.annotation.JsonbPropertyOrder;
 import jakarta.json.bind.annotation.JsonbTypeAdapter;
 import jakarta.ws.rs.core.Link;
@@ -17,8 +17,8 @@ import java.io.Serializable;
 
 
 @XmlRootElement(name = "job")
-@XmlType(propOrder = {"jobId", "jobTitle", "minSalary", "maxSalary", "links"})
-@JsonbPropertyOrder({"jobId", "jobTitle", "minSalary", "maxSalary", "links"})
+@XmlType(propOrder = {"jobId", "jobTitle", "minSalary", "maxSalary", "link"})
+@JsonbPropertyOrder({"jobId", "jobTitle", "minSalary", "maxSalary", "link"})
 @Setter
 @ToString
 @NoArgsConstructor

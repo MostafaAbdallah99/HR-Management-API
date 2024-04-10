@@ -1,8 +1,8 @@
 package gov.iti.hr.restcontrollers.resources.departments;
 
+import gov.iti.hr.adapter.JsonbSingleLinkAdapter;
 import gov.iti.hr.models.DepartmentDTO;
 import gov.iti.hr.adapter.JaxbLinkAdapter;
-import gov.iti.hr.adapter.JsonbSingleLinkAdapter;
 import gov.iti.hr.restcontrollers.resources.employees.ManagerResponse;
 import jakarta.json.bind.annotation.JsonbPropertyOrder;
 import jakarta.json.bind.annotation.JsonbTypeAdapter;
@@ -17,8 +17,8 @@ import lombok.Setter;
 import lombok.ToString;
 
 @XmlRootElement(name = "department")
-@XmlType(propOrder = {"departmentId", "departmentName", "managerName"})
-@JsonbPropertyOrder({"departmentId", "departmentName", "managerName"})
+@XmlType(propOrder = {"departmentId", "departmentName", "managerName", "link"})
+@JsonbPropertyOrder({"departmentId", "departmentName", "managerName", "link"})
 @Setter
 @NoArgsConstructor
 @ToString
