@@ -49,6 +49,12 @@ public class EmployeeResponse implements Serializable {
     @Getter
     private DepartmentResponse departmentResponse;
     @Getter
+    private String managerName;
+    @Getter
+    private String departmentName;
+    @Getter
+    private String jobTitle;
+    @Getter
     private ManagerResponse managerResponse;
     @JsonbTypeAdapter(JsonbSingleLinkAdapter.class)
     private Link link;
@@ -60,7 +66,9 @@ public class EmployeeResponse implements Serializable {
         this.email = employeeDTO.email();
         this.phoneNumber = employeeDTO.phoneNumber();
         this.hireDate = employeeDTO.hireDate();
-        this.jobResponse = new JobResponse(employeeDTO.job());
+        this.jobTitle = employeeDTO.jobName();
+        this.departmentName = employeeDTO.departmentName();
+        this.managerName = employeeDTO.managerEmail();
         this.salary = employeeDTO.salary();
         this.vacationBalance = employeeDTO.vacationBalance();
         this.link = null;

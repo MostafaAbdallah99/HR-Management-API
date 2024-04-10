@@ -128,7 +128,7 @@ public class EmployeeService {
                     managerDTO.vacationBalance(),
                     managerDTO.gender(),
                     managerDTO.jobName(),
-                    managerDTO.departmentName(), null, jobDTO);
+                    null, jobDTO);
             Employee employee = ManagerMapper.INSTANCE.managerDTOToManager(newManagerDTO);
             if (employeeRepository.save(employee, entityManager)) {
                 return new AbstractMap.SimpleEntry<>(employee.getEmployeeId(), newManagerDTO);

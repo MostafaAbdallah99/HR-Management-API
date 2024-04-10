@@ -41,11 +41,6 @@ public class EmployeeResourceService implements EmployeeResource {
         EmployeeDTO employeeDTO = employeeService.getEmployeeById(id);
         EmployeeResponse employeeResponse = new EmployeeResponse(employeeDTO);
         employeeResponse.setLink(LinksUtil.createSelfLink(uriInfo, EmployeeResourceService.class, id.toString()));
-        employeeResponse.getDepartmentResponse().setLink(LinksUtil.createSelfLink(uriInfo, DepartmentResourceService.class, employeeDTO.department().departmentId().toString()));
-        employeeResponse.getJobResponse().setLink(LinksUtil.createSelfLink(uriInfo, JobResourceService.class, employeeDTO.job().jobId().toString()));
-        if(employeeDTO.manager() != null) {
-            employeeResponse.getManagerResponse().setLink(LinksUtil.createSelfLink(uriInfo, EmployeeResourceService.class, employeeDTO.manager().employeeId().toString()));
-        }
         return Response.ok(employeeResponse).build();
     }
 
@@ -94,7 +89,29 @@ public class EmployeeResourceService implements EmployeeResource {
 
     @Override
     public Response updateEmployee(Integer id, EmployeeDTO employeeDTO) {
-        return null;
+        BeanValidator.validateBean(employeeDTO);
+
+        EmployeeDTO updatedEmployeeDTO = new EmployeeDTO(
+                id,
+                employeeDTO.firstName(),
+                employeeDTO.lastName(),
+                employeeDTO.email(),
+                employeeDTO.phoneNumber(),
+                employeeDTO.hireDate(),
+                employeeDTO.salary(),
+                employeeDTO.vacationBalance(),
+                employeeDTO.gender(),
+                employeeDTO.managerEmail(),
+                employeeDTO.jobName(),
+                employeeDTO.departmentName(),
+                employeeDTO.manager(),
+                employeeDTO.job(),
+                employeeDTO.department()
+                );
+        employeeService.updateEmployee(updatedEmployeeDTO);
+        EmployeeResponse employeeResponse = new EmployeeResponse(updatedEmployeeDTO);
+        employeeResponse.setLink(LinksUtil.createSelfLink(uriInfo, EmployeeResourceService.class, id.toString()));
+        return Response.ok(employeeResponse).build();
     }
 
     @Override

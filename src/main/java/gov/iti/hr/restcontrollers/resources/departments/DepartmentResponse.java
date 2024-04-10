@@ -37,7 +37,6 @@ public class DepartmentResponse {
     public DepartmentResponse(DepartmentDTO departmentDTO) {
         this.departmentId = departmentDTO.departmentId();
         this.departmentName = departmentDTO.departmentName();
-        this.manager = new ManagerResponse(departmentDTO.managerDTO());
         this.managerId = departmentDTO.managerId();
         this.link = null;
     }

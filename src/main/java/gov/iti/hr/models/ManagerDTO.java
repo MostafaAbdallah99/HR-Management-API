@@ -33,7 +33,6 @@ public record ManagerDTO (
         @NotNull(message = "Job is required")
         String jobName,
         String departmentName,
-        DepartmentDTO department,
         JobDTO job
 ) implements DTO {
     @Override

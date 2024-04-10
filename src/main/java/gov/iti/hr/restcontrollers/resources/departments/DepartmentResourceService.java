@@ -4,7 +4,6 @@ import gov.iti.hr.filters.DepartmentFilter;
 import gov.iti.hr.models.DepartmentDTO;
 
 import gov.iti.hr.models.validation.BeanValidator;
-import gov.iti.hr.restcontrollers.resources.employees.EmployeeResourceService;
 import gov.iti.hr.restcontrollers.resources.interfaces.DepartmentResource;
 import gov.iti.hr.restcontrollers.utils.LinksUtil;
 import gov.iti.hr.services.DepartmentService;
@@ -37,7 +36,6 @@ public class DepartmentResourceService implements DepartmentResource {
         DepartmentDTO departmentDTO = departmentService.getDepartmentById(id);
         DepartmentResponse departmentResponse = new DepartmentResponse(departmentDTO);
         departmentResponse.setLink(LinksUtil.createSelfLink(uriInfo, DepartmentResourceService.class, id.toString()));
-        departmentResponse.getManager().setLink(LinksUtil.createSelfLink(uriInfo, EmployeeResourceService.class, departmentResponse.getDepartmentId().toString()));
         return Response.ok(departmentResponse).build();
     }
 
@@ -47,7 +45,6 @@ public class DepartmentResourceService implements DepartmentResource {
         List<DepartmentDTO> departments = departmentService.findAllDepartments(departmentFilter);
         List<DepartmentResponse> departmentResponses = departments.stream().map(DepartmentResponse::new).toList();
         departmentResponses.forEach(departmentResponse -> departmentResponse.setLink(LinksUtil.createSelfLink(uriInfo, DepartmentResourceService.class, departmentResponse.getDepartmentId().toString())));
-        departmentResponses.forEach(departmentResponse -> departmentResponse.getManager().setLink(LinksUtil.createSelfLink(uriInfo, EmployeeResourceService.class, departmentResponse.getDepartmentId().toString())));
         List<Link> links = LinksUtil.createPaginatedResourceLinks(uriInfo, departmentFilter.getPaginationBean(), count);
         DepartmentPaginationResponse departmentPaginationResponse = new DepartmentPaginationResponse(departmentResponses, links);
         return Response.ok(departmentPaginationResponse).build();
@@ -60,7 +57,6 @@ public class DepartmentResourceService implements DepartmentResource {
         Integer departmentId = departmentService.saveDepartment(departmentDTO);
         DepartmentResponse departmentResponse = new DepartmentResponse(departmentDTO);
         departmentResponse.setLink(LinksUtil.createSelfLink(uriInfo, DepartmentResourceService.class, departmentId.toString()));
-        departmentResponse.getManager().setLink(LinksUtil.createSelfLink(uriInfo, EmployeeResourceService.class, departmentDTO.managerId() == null ? "" : departmentDTO.managerId().toString()));
         URI uri = LinksUtil.createUriAfterPostRequest(uriInfo, DepartmentResourceService.class, departmentId.toString());
         return Response.created(uri).entity(departmentResponse).build();
     }

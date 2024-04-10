@@ -49,11 +49,7 @@ public class DepartmentService {
             Optional<Department> department = departmentRepository.findById(departmentDTO.departmentId(), entityManager);
             department.ifPresentOrElse(d -> {
                 if(departmentDTO.managerId() != null) {
-                    Department managerDepartment = employeeRepository.hasDepartment(departmentDTO.managerId(), entityManager)
-                            .orElseThrow(() -> new BadRequestException("Manager with id: " + departmentDTO.managerId() + " does not exist"));
-                    if(managerDepartment.getDepartmentId() != null && !managerDepartment.getDepartmentId().equals(departmentDTO.departmentId())) {
-                        throw new BadRequestException("Manager with id: " + departmentDTO.managerId() + " is already a manager of another department");
-                    }
+
                     ManagerDTO managerDTO = employeeRepository.findReferenceById(departmentDTO.managerId(), entityManager)
                             .map(ManagerMapper.INSTANCE::managerToManagerDTO)
                             .orElseThrow(() -> new ResourceNotFoundException("Manager not found with id: " + departmentDTO.managerId()));
