@@ -11,6 +11,23 @@
 //class DepartmentResourceServiceTest {
 //
 //    @Test
+//    void addDepartment() {
+//        // Arrange
+//        Client client = ClientBuilder.newClient();
+//        WebTarget target = client.target("http://localhost:9090/HR_Management_API/rest/departments");
+//        Invocation.Builder builder = target.request(MediaType.APPLICATION_JSON);
+//
+//        // Act
+//        DepartmentDTO departmentDTO = new DepartmentDTO(null, "Test Department", null, null);
+//        Entity<DepartmentDTO> departmentEntity = Entity.entity(departmentDTO, MediaType.APPLICATION_JSON);
+//        Response response = builder.post(departmentEntity);
+//
+//        //Assert
+//        assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
+//        client.close();
+//    }
+//
+//    @Test
 //    void testGetAllDepartments() {
 //        // Arrange
 //        Client client = ClientBuilder.newClient();
@@ -30,7 +47,7 @@
 //        // Arrange
 //        Client client = ClientBuilder.newClient();
 //        WebTarget target = client.target("http://localhost:9090/HR_Management_API/rest/departments/{id}");
-//        WebTarget resolvedTarget = target.resolveTemplate("id", 3);
+//        WebTarget resolvedTarget = target.resolveTemplate("id", 1);
 //        Invocation.Builder builder = resolvedTarget.request(MediaType.APPLICATION_JSON);
 //
 //        // Act
@@ -43,32 +60,15 @@
 //    }
 //
 //    @Test
-//    void addDepartment() {
-//        // Arrange
-//        Client client = ClientBuilder.newClient();
-//        WebTarget target = client.target("http://localhost:9090/HR_Management_API/rest/departments");
-//        Invocation.Builder builder = target.request(MediaType.APPLICATION_JSON);
-//
-//        // Act
-//        DepartmentDTO departmentDTO = new DepartmentDTO(null, "Test Department", null, null);
-//        Entity<DepartmentDTO> departmentEntity = Entity.entity(departmentDTO, MediaType.APPLICATION_JSON);
-//        Response response = builder.post(departmentEntity);
-//
-//        //Assert
-//        assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
-//        client.close();
-//    }
-//
-//    @Test
 //    void updateDepartment() {
 //        // Arrange
 //        Client client = ClientBuilder.newClient();
 //        WebTarget target = client.target("http://localhost:9090/HR_Management_API/rest/departments/{id}");
-//        WebTarget resolvedTarget = target.resolveTemplate("id", 9);
+//        WebTarget resolvedTarget = target.resolveTemplate("id", 1);
 //        Invocation.Builder builder = resolvedTarget.request(MediaType.APPLICATION_JSON);
 //
 //        // Act
-//        DepartmentDTO departmentDTO = new DepartmentDTO(9, "Test Department55", 11, null);
+//        DepartmentDTO departmentDTO = new DepartmentDTO(1, "Test Department55", 11, null);
 //        Entity<DepartmentDTO> departmentEntity = Entity.entity(departmentDTO, MediaType.APPLICATION_JSON);
 //        Response response = builder.put(departmentEntity);
 //
@@ -82,7 +82,7 @@
 //        // Arrange
 //        Client client = ClientBuilder.newClient();
 //        WebTarget target = client.target("http://localhost:9090/HR_Management_API/rest/departments/{id}");
-//        WebTarget resolvedTarget = target.resolveTemplate("id", 9);
+//        WebTarget resolvedTarget = target.resolveTemplate("id", 1);
 //        Invocation.Builder builder = resolvedTarget.request(MediaType.APPLICATION_JSON);
 //
 //        // Act
