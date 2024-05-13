@@ -56,11 +56,11 @@
 
 <!-- Features -->
 ## :dart: Features
-- Adding products
-- Updating products
-- Deleting products
-- Review customer's profile
-- Review customer's orders history
+- Allows adding, updating, and removing employees
+- Allows adding, updating, and removing departments
+- Enables assigning employees to departments
+- Enables employees to take vacations
+- HATEOAS
   
 <!-- Getting Started -->
 ## 	:toolbox: Getting Started
